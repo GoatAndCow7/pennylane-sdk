@@ -61,7 +61,7 @@ client.customer_invoices.send_to_pa(invoice.id)
 quote = client.quotes.create(customer_id=123, invoice_lines=[...])
 client.quotes.send_by_email(quote.id)
 # once accepted:
-invoice = client.customer_invoices.create_from_quote(quote_id=quote.id)
+invoice = client.customer_invoices.create_from_quote(quote_id=quote.id, draft=True)
 ```
 
 ## Get paid and reconcile
@@ -93,16 +93,25 @@ client.customer_invoices.link_credit_note(invoice.id, credit_note_id=credit_note
 
 ## Import existing invoices
 
-Invoices produced outside Pennylane (another tool, a marketplace) can be imported:
+Invoices produced outside Pennylane (another tool, a marketplace) can be imported. For a plain PDF, upload the file first, then reference it:
 
 ```python
-# From a PDF file
+# 1. Upload the PDF as a file attachment
+attachment = client.file_attachments.create(file="path/to/invoice.pdf")
+
+# 2. Import the invoice referencing it
 imported = client.customer_invoices.import_from_file(
-    file="path/to/invoice.pdf",
-    # + invoice fields, see the docstring
+    file_attachment_id=attachment.id,
+    date="2026-07-01",
+    deadline="2026-07-31",
+    customer_id=123,
+    currency_amount_before_tax="100.00",
+    currency_amount="120.00",
+    currency_tax="20.00",
+    invoice_lines=[...],
 )
 
-# From a structured e-invoice (Factur-X, UBL, CII)
+# Structured e-invoices (Factur-X, UBL, CII) upload directly
 imported = client.customer_invoices.import_e_invoice(file="path/to/factur-x.pdf")
 ```
 

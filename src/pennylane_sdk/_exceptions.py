@@ -15,6 +15,7 @@ documents ``{"error", "message", "details"}`` while the OpenAPI spec declares
 
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -27,6 +28,7 @@ __all__ = [
     "AuthenticationError",
     "BadRequestError",
     "ConflictError",
+    "InvalidResponseError",
     "NotFoundError",
     "PennylaneError",
     "PermissionDeniedError",
@@ -54,6 +56,21 @@ class APITimeoutError(APIConnectionError):
         super().__init__(message)
 
 
+class InvalidResponseError(PennylaneError):
+    """The API answered with a success status but an unusable body.
+
+    Typically a proxy, captive portal or gateway returning HTML with a
+    200 status. The original :class:`httpx.Response` is available as
+    ``response`` for inspection.
+    """
+
+    def __init__(self, message: str, *, response: httpx.Response) -> None:
+        super().__init__(message)
+        self.message = message
+        self.response = response
+        self.status_code: int = response.status_code
+
+
 class APIStatusError(PennylaneError):
     """The API answered with an error status code (4xx / 5xx).
 
@@ -68,6 +85,12 @@ class APIStatusError(PennylaneError):
             (e.g. per-field validation errors).
         body: The parsed JSON body, or ``None`` if the body was not JSON.
         response: The raw :class:`httpx.Response`.
+
+    .. warning::
+        ``response.request`` carries the original request, including the
+        ``Authorization`` header with your API token (and, for OAuth token
+        calls, the client secret in the body). Never log the request
+        verbatim; log ``status_code``, ``error_code`` and ``message`` instead.
     """
 
     def __init__(
@@ -155,9 +178,12 @@ def _parse_retry_after(response: httpx.Response) -> float | None:
     if raw is None:
         return None
     try:
-        return max(0.0, float(raw))
+        value = float(raw)
     except ValueError:
         return None
+    if not math.isfinite(value):
+        return None
+    return max(0.0, value)
 
 
 def make_status_error(response: httpx.Response) -> APIStatusError:
@@ -191,6 +217,13 @@ def make_status_error(response: httpx.Response) -> APIStatusError:
     if message is None:
         text = response.text.strip()
         message = text[:500] if text else f"HTTP {response.status_code}"
+
+    if 300 <= response.status_code < 400:
+        location = response.headers.get("location", "unknown")
+        message = (
+            f"Unexpected redirect (HTTP {response.status_code}) to {location!r}. "
+            "The SDK does not follow redirects; check your base_url."
+        )
 
     if response.status_code >= 500:
         cls: type[APIStatusError] = ServerError

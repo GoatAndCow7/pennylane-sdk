@@ -83,7 +83,9 @@ for dossier in cabinet.companies.list():
         print(ligne.number, ligne.debits, ligne.credits)
 
     # Export FEC
-    export = cabinet.exports.fecs.create(dossier.id, fiscal_year_id=7)
+    export = cabinet.exports.fecs.create(
+        dossier.id, period_start="2026-01-01", period_end="2026-12-31"
+    )
 ```
 
 ## Facturation électronique (réforme 2026)

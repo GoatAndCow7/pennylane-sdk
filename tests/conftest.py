@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import pytest
 
-from pennylane_sdk._base_client import AsyncAPIClient, SyncAPIClient
+from pennylane_sdk._base_client import AsyncAPIClient, BaseAPIClient, SyncAPIClient
 
 BASE_URL = "https://app.pennylane.com/api/external/v2"
+
+# The real implementation, captured before the autouse fixture below patches
+# it out. Tests exercising the retry-delay logic itself call this directly.
+REAL_RETRY_DELAY = BaseAPIClient._retry_delay
 
 
 @pytest.fixture

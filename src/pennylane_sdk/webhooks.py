@@ -21,7 +21,6 @@ Known event types: ``customer_invoice.e_invoicing_status_updated``,
 from __future__ import annotations
 
 import base64
-import binascii
 import hashlib
 import hmac
 import json
@@ -55,6 +54,7 @@ def _candidate_digests(payload: bytes, secret: str) -> list[bytes]:
     digest = hmac.new(secret.encode("utf-8"), payload, hashlib.sha256).digest()
     return [
         digest.hex().encode("ascii"),
+        digest.hex().upper().encode("ascii"),
         base64.b64encode(digest),
     ]
 
@@ -117,10 +117,10 @@ def parse_event(
             "Webhook signature verification failed. Ensure you pass the raw "
             "request body and the secret returned when creating the subscription."
         )
-    body = payload.decode("utf-8") if isinstance(payload, bytes) else payload
     try:
+        body = payload.decode("utf-8") if isinstance(payload, bytes) else payload
         parsed = json.loads(body)
-    except (json.JSONDecodeError, UnicodeDecodeError, binascii.Error) as exc:
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise PennylaneError(f"Webhook payload is not valid JSON: {exc}") from exc
     if not isinstance(parsed, dict):
         raise PennylaneError("Webhook payload must be a JSON object.")

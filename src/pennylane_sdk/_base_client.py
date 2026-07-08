@@ -18,11 +18,13 @@ Retry policy: designed for an accounting API with NO server-side idempotency
 
 from __future__ import annotations
 
+import math
 import random
 import time
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, TypeVar, overload
+from urllib.parse import urlsplit
 
 import anyio
 import httpx
@@ -31,6 +33,7 @@ from . import filters as _filters
 from ._exceptions import (
     APIConnectionError,
     APITimeoutError,
+    InvalidResponseError,
     make_status_error,
 )
 from ._models import PennylaneModel, jsonable
@@ -54,6 +57,23 @@ _RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 504})
 _IDEMPOTENT_METHODS = frozenset({"GET", "PUT", "DELETE", "HEAD"})
 _MAX_BACKOFF = 8.0
 _INITIAL_BACKOFF = 0.5
+# Upper bound applied to server-provided retry-after values, so a
+# misconfigured proxy cannot park a worker for hours.
+_MAX_RETRY_AFTER = 60.0
+_LOCAL_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+
+
+def _validate_base_url(base_url: str) -> str:
+    """Require https, tolerating plain http only for local development."""
+    parts = urlsplit(base_url)
+    if parts.scheme == "https":
+        return base_url
+    if parts.scheme == "http" and parts.hostname in _LOCAL_HOSTS:
+        return base_url
+    raise ValueError(
+        f"base_url must use https (got {base_url!r}). Plain http is allowed "
+        "only for localhost, to avoid sending your API token in cleartext."
+    )
 
 
 @dataclass(frozen=True)
@@ -103,7 +123,7 @@ class BaseAPIClient:
         if not api_token or not api_token.strip():
             raise ValueError("api_token must be a non-empty string")
         self._api_token = api_token
-        self.base_url = base_url.rstrip("/")
+        self.base_url = _validate_base_url(base_url.rstrip("/"))
         self.timeout = DEFAULT_TIMEOUT if timeout is None else timeout
         if max_retries < 0:
             raise ValueError("max_retries must be >= 0")
@@ -149,9 +169,11 @@ class BaseAPIClient:
             retry_after: str | None = response.headers.get("retry-after")
             if retry_after is not None:
                 try:
-                    return max(0.0, float(retry_after))
+                    value = float(retry_after)
                 except ValueError:
-                    pass
+                    value = math.nan
+                if math.isfinite(value):
+                    return min(max(0.0, value), _MAX_RETRY_AFTER)
         delay = min(_INITIAL_BACKOFF * (1 << attempt), _MAX_BACKOFF)
         return delay + random.uniform(0, delay / 4)
 
@@ -164,7 +186,16 @@ class BaseAPIClient:
     def _parse_json(response: httpx.Response) -> Any:
         if response.status_code == 204 or not response.content:
             return None
-        return response.json()
+        try:
+            return response.json()
+        except Exception as exc:
+            content_type = response.headers.get("content-type", "unknown")
+            excerpt = response.text[:200]
+            raise InvalidResponseError(
+                f"Expected a JSON body but got content-type {content_type!r} "
+                f"(HTTP {response.status_code}): {excerpt!r}",
+                response=response,
+            ) from exc
 
 
 class SyncAPIClient(BaseAPIClient):
@@ -321,8 +352,8 @@ class SyncAPIClient(BaseAPIClient):
                     headers=self._headers(),
                 )
             except httpx.TimeoutException as exc:
-                # Connect timeouts never reached the server: always retryable.
-                request_sent = not isinstance(exc, httpx.ConnectTimeout)
+                # Connect/pool timeouts never reached the server: always retryable.
+                request_sent = not isinstance(exc, (httpx.ConnectTimeout, httpx.PoolTimeout))
                 if self._can_retry_transport(method, attempt, request_sent):
                     time.sleep(self._retry_delay(attempt, None))
                     attempt += 1
@@ -337,7 +368,7 @@ class SyncAPIClient(BaseAPIClient):
                 raise APIConnectionError(f"Connection error while requesting {path}.") from exc
 
             self._track_response(response)
-            if response.status_code < 400:
+            if 200 <= response.status_code < 300:
                 return self._parse_json(response)
 
             if attempt < self.max_retries and self._should_retry_status(
@@ -501,7 +532,8 @@ class AsyncAPIClient(BaseAPIClient):
                     headers=self._headers(),
                 )
             except httpx.TimeoutException as exc:
-                request_sent = not isinstance(exc, httpx.ConnectTimeout)
+                # Connect/pool timeouts never reached the server: always retryable.
+                request_sent = not isinstance(exc, (httpx.ConnectTimeout, httpx.PoolTimeout))
                 if self._can_retry_transport(method, attempt, request_sent):
                     await anyio.sleep(self._retry_delay(attempt, None))
                     attempt += 1
@@ -516,7 +548,7 @@ class AsyncAPIClient(BaseAPIClient):
                 raise APIConnectionError(f"Connection error while requesting {path}.") from exc
 
             self._track_response(response)
-            if response.status_code < 400:
+            if 200 <= response.status_code < 300:
                 return self._parse_json(response)
 
             if attempt < self.max_retries and self._should_retry_status(

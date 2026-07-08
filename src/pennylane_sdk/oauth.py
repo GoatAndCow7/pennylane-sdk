@@ -24,8 +24,15 @@ import threading
 from urllib.parse import urlencode
 
 import httpx
+from pydantic import Field
 
-from ._exceptions import make_status_error
+from ._base_client import _validate_base_url
+from ._exceptions import (
+    APIConnectionError,
+    APITimeoutError,
+    InvalidResponseError,
+    make_status_error,
+)
 from ._models import PennylaneModel
 
 __all__ = ["AsyncOAuthApp", "OAuthApp", "OAuthTokens"]
@@ -35,10 +42,15 @@ DEFAULT_TOKEN_URL = "https://app.pennylane.com/oauth/oauth/token"
 
 
 class OAuthTokens(PennylaneModel):
-    """Token pair returned by the Pennylane OAuth token endpoint."""
+    """Token pair returned by the Pennylane OAuth token endpoint.
 
-    access_token: str
-    refresh_token: str | None = None
+    The token values are excluded from ``repr``/``str`` so that logging the
+    object does not leak credentials; access them explicitly through
+    ``tokens.access_token`` / ``tokens.refresh_token``.
+    """
+
+    access_token: str = Field(repr=False)
+    refresh_token: str | None = Field(default=None, repr=False)
     token_type: str | None = None
     expires_in: int | None = None
     """Access token lifetime in seconds (Pennylane: 86400 = 24 hours)."""
@@ -59,8 +71,9 @@ class _BaseOAuthApp:
         self.client_id = client_id
         self._client_secret = client_secret
         self.redirect_uri = redirect_uri
-        self.authorize_url = authorize_url
-        self.token_url = token_url
+        # Enforce https so client_secret and tokens never travel in cleartext.
+        self.authorize_url = _validate_base_url(authorize_url)
+        self.token_url = _validate_base_url(token_url)
 
     def authorization_url(
         self,
@@ -107,7 +120,15 @@ class _BaseOAuthApp:
     def _parse_tokens(response: httpx.Response) -> OAuthTokens:
         if response.status_code >= 400:
             raise make_status_error(response)
-        return OAuthTokens.model_validate(response.json())
+        try:
+            payload = response.json()
+        except Exception as exc:
+            raise InvalidResponseError(
+                "The OAuth token endpoint returned a non-JSON body "
+                f"(HTTP {response.status_code}).",
+                response=response,
+            ) from exc
+        return OAuthTokens.model_validate(payload)
 
 
 class OAuthApp(_BaseOAuthApp):
@@ -134,9 +155,19 @@ class OAuthApp(_BaseOAuthApp):
         self._owns_http = http_client is None
         self._refresh_lock = threading.Lock()
 
+    def _post_token_request(self, data: dict[str, str]) -> httpx.Response:
+        try:
+            return self._http.post(self.token_url, data=data)
+        except httpx.TimeoutException as exc:
+            raise APITimeoutError("The OAuth token request timed out.") from exc
+        except httpx.TransportError as exc:
+            raise APIConnectionError(
+                "Connection error during the OAuth token request."
+            ) from exc
+
     def exchange_code(self, code: str) -> OAuthTokens:
         """Exchange the authorization code for the initial token pair."""
-        response = self._http.post(self.token_url, data=self._exchange_payload(code))
+        response = self._post_token_request(self._exchange_payload(code))
         return self._parse_tokens(response)
 
     def refresh(self, refresh_token: str) -> OAuthTokens:
@@ -146,9 +177,7 @@ class OAuthApp(_BaseOAuthApp):
         invalid.
         """
         with self._refresh_lock:
-            response = self._http.post(
-                self.token_url, data=self._refresh_payload(refresh_token)
-            )
+            response = self._post_token_request(self._refresh_payload(refresh_token))
             return self._parse_tokens(response)
 
     def close(self) -> None:
@@ -186,9 +215,19 @@ class AsyncOAuthApp(_BaseOAuthApp):
         self._owns_http = http_client is None
         self._refresh_lock = asyncio.Lock()
 
+    async def _post_token_request(self, data: dict[str, str]) -> httpx.Response:
+        try:
+            return await self._http.post(self.token_url, data=data)
+        except httpx.TimeoutException as exc:
+            raise APITimeoutError("The OAuth token request timed out.") from exc
+        except httpx.TransportError as exc:
+            raise APIConnectionError(
+                "Connection error during the OAuth token request."
+            ) from exc
+
     async def exchange_code(self, code: str) -> OAuthTokens:
         """Exchange the authorization code for the initial token pair."""
-        response = await self._http.post(self.token_url, data=self._exchange_payload(code))
+        response = await self._post_token_request(self._exchange_payload(code))
         return self._parse_tokens(response)
 
     async def refresh(self, refresh_token: str) -> OAuthTokens:
@@ -198,9 +237,7 @@ class AsyncOAuthApp(_BaseOAuthApp):
         invalid.
         """
         async with self._refresh_lock:
-            response = await self._http.post(
-                self.token_url, data=self._refresh_payload(refresh_token)
-            )
+            response = await self._post_token_request(self._refresh_payload(refresh_token))
             return self._parse_tokens(response)
 
     async def close(self) -> None:

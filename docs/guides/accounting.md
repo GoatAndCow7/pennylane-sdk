@@ -45,8 +45,14 @@ If the lines do not balance, the API answers 422 and the SDK raises `ValidationE
 Lettering links entry lines that settle each other, typically an invoice line with its payment line:
 
 ```python
-client.ledger_entry_lines.letter(ledger_entry_line_ids=[111, 222])
-client.ledger_entry_lines.unletter(ledger_entry_line_ids=[111, 222])
+client.ledger_entry_lines.letter(
+    unbalanced_lettering_strategy="none",
+    ledger_entry_lines=[{"id": 111}, {"id": 222}],
+)
+client.ledger_entry_lines.unletter(
+    unbalanced_lettering_strategy="none",
+    ledger_entry_lines=[{"id": 111}, {"id": 222}],
+)
 client.ledger_entry_lines.list_lettered_lines(111)
 ```
 
@@ -81,11 +87,13 @@ Exports run asynchronously: create the export, then poll until the file is ready
 ```python
 import time
 
-export = client.exports.fecs.create(fiscal_year_id=7)
+export = client.exports.fecs.create(
+    period_start="2026-01-01", period_end="2026-12-31"
+)
 while export.status not in ("done", "failed"):
     time.sleep(5)
     export = client.exports.fecs.get(export.id)
-print(export.url)   # download link
+print(export.file_url)   # download link
 ```
 
 Same pattern for `client.exports.general_ledgers` and `client.exports.analytical_general_ledgers`.

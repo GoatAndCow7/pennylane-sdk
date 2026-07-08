@@ -64,7 +64,9 @@ firm.dms.files.create(company_id, file="path/to/piece.pdf", ...)
 ## Exports
 
 ```python
-export = firm.exports.fecs.create(company_id, fiscal_year_id=7)
+export = firm.exports.fecs.create(
+    company_id, period_start="2026-01-01", period_end="2026-12-31"
+)
 export = firm.exports.fecs.get(company_id, export.id)   # poll until done
 ```
 
