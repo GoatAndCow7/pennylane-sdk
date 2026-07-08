@@ -15,7 +15,7 @@ from typing import Annotated, Any
 
 from pydantic import BaseModel, ConfigDict, PlainSerializer
 
-__all__ = ["Money", "PennylaneModel", "jsonable"]
+__all__ = ["Money", "MoneyInput", "PennylaneModel", "drop_none", "jsonable"]
 
 
 def _decimal_to_string(value: Decimal) -> str:
@@ -27,6 +27,10 @@ def _decimal_to_string(value: Decimal) -> str:
 # serialized back to a plain string as the API requires.
 Money = Annotated[Decimal, PlainSerializer(_decimal_to_string, return_type=str)]
 
+# What SDK methods accept for monetary inputs. The API requires float values
+# as strings; Decimals are converted automatically by :func:`jsonable`.
+MoneyInput = Decimal | str
+
 
 class PennylaneModel(BaseModel):
     """Base class for every API object returned by the SDK.
@@ -36,6 +40,15 @@ class PennylaneModel(BaseModel):
     """
 
     model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+
+def drop_none(mapping: dict[str, Any]) -> dict[str, Any]:
+    """Return a copy of ``mapping`` without the ``None`` entries.
+
+    Used by resource methods to build request bodies from optional keyword
+    arguments: an argument left to ``None`` is simply not sent.
+    """
+    return {key: value for key, value in mapping.items() if value is not None}
 
 
 def jsonable(value: Any) -> Any:

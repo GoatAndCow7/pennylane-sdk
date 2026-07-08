@@ -36,10 +36,11 @@ SUITES = [
 
 HTTP_METHODS = ("get", "post", "put", "patch", "delete")
 
-# self._get("/x") | self._post(f"/x/{id}") | self._client.request("GET", "/x")
+# self._get("/x") | self._get_page("/x") | self._post(f"/x/{id}")
+# | self._client.request("GET", "/x")
 CALL_RE = re.compile(
-    r"self\._(?:(get|post|put|patch|delete)|client\.request\(\s*\"(GET|POST|PUT|PATCH|DELETE)\",)"
-    r"\(?\s*f?\"(/[^\"]*)\"",
+    r"self\._(?:(get_page|get|post|put|patch|delete)\(|client\.request\(\s*\"(GET|POST|PUT|PATCH|DELETE)\",)"
+    r"\s*f?\"(/[^\"]*)\"",
 )
 
 PLACEHOLDER_RE = re.compile(r"\{[^}]*\}")
@@ -106,6 +107,8 @@ def scan_calls(resources_dir: Path) -> list[tuple[str, str, str, bool]]:
             is_async = class_name.startswith("Async")
             for m in CALL_RE.finditer(body):
                 method = (m.group(1) or m.group(2)).upper()
+                if method == "GET_PAGE":
+                    method = "GET"
                 calls.append((py_file.name, method, normalize(m.group(3)), is_async))
     return calls
 
