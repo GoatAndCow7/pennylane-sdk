@@ -1,0 +1,81 @@
+name: API spec watch
+
+# Weekly check: has Pennylane changed its OpenAPI specs? If so, open an
+# issue with the diff so maintenance never depends on someone remembering
+# to look.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"  # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Refresh vendored specs from pennylane.readme.io
+        run: uv run python scripts/update_specs.py
+
+      - name: Detect spec changes
+        id: diff
+        run: |
+          if git diff --quiet specs/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "SPEC_DIFF<<EOF"
+              git diff --stat specs/
+              echo
+              echo '```'
+              git diff specs/ | head -300
+              echo '```'
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          fi
+
+      - name: Coverage audit against the new specs
+        if: steps.diff.outputs.changed == 'true'
+        id: coverage
+        run: |
+          {
+            echo "COVERAGE<<EOF"
+            uv run python scripts/check_coverage.py || true
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Open an issue (unless one is already open)
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --label spec-watch --state open --json number --jq 'length')
+          if [ "$existing" -gt 0 ]; then
+            echo "An open spec-watch issue already exists; skipping."
+            exit 0
+          fi
+          gh label create spec-watch --repo "$GITHUB_REPOSITORY" --color FBCA04 \
+            --description "Pennylane API spec changed" 2>/dev/null || true
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Pennylane API specs changed ($(date -u +%Y-%m-%d))" \
+            --label spec-watch \
+            --body "The weekly spec watch detected changes in the official Pennylane OpenAPI specs.
+
+**Coverage audit against the new specs:**
+
+\`\`\`
+${COVERAGE}
+\`\`\`
+
+**Spec diff (truncated):**
+
+${SPEC_DIFF}
+
+To update: run \`uv run python scripts/update_specs.py\`, implement anything reported as MISSING (see CONTRIBUTING.md), fix any UNKNOWN CALL, and commit the refreshed specs."
