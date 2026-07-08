@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "pennylane-sdk"
 version = "0.1.0"
-description = "Unofficial Python SDK for the Pennylane API — the French accounting and invoicing platform"
+description = "Unofficial Python SDK for the Pennylane API, the French accounting and invoicing platform"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -50,6 +50,7 @@ dev = [
     "ruff>=0.6",
     "coverage[toml]>=7.5",
     "mkdocs-material>=9.5",
+    "mkdocs-static-i18n>=1.2",
     "mkdocstrings[python]>=0.26",
 ]
 

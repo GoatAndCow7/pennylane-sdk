@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://goatandcow7.github.io/pennylane-sdk/
+    about: Guides, API reference and examples
+  - name: Pennylane API status and official docs
+    url: https://pennylane.readme.io/
+    about: For questions about the API itself rather than this SDK

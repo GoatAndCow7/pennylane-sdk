@@ -32,8 +32,62 @@ theme:
     - search.suggest
     - search.highlight
 
+hooks:
+  - scripts/mkdocs_hooks.py
+
 plugins:
   - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          name: English
+          default: true
+          build: true
+        - locale: fr
+          name: Français
+          build: true
+          site_description: SDK Python non officiel pour l'API Pennylane (plateforme française de comptabilité et de facturation)
+          nav_translations:
+            Home: Accueil
+            Getting started: Démarrage rapide
+            Guides: Guides
+            Authentication: Authentification
+            Pagination and filtering: Pagination et filtres
+            Errors, retries and rate limits: Erreurs, retries et limites de débit
+            Invoicing lifecycle: Cycle de vie de la facturation
+            French e-invoicing (2026 reform): Facturation électronique (réforme 2026)
+            Accounting operations: Opérations comptables
+            Firm API (accounting firms): API Cabinet (experts-comptables)
+            Webhooks: Webhooks
+            OAuth 2.0 apps: Applications OAuth 2.0
+            API reference: Référence API
+            Clients: Clients
+            Company resources: Ressources Entreprise
+            Invoicing (sales): Facturation (ventes)
+            Purchases: Achats
+            Banking: Banque
+            Accounting: Comptabilité
+            Analytics (categories): Analytique (catégories)
+            Exports: Exports
+            Payment mandates: Mandats de paiement
+            E-invoicing: Facturation électronique
+            Webhooks and misc: Webhooks et divers
+            Firm resources: Ressources Cabinet
+            Errors: Erreurs
+            Pagination: Pagination
+            Filters: Filtres
+            OAuth: OAuth
+            Webhook helpers: Helpers webhooks
+            Contributing: Contribuer
+            How to contribute: Comment contribuer
+            Design contract (resource map): Contrat de conception (resource map)
+            Changelog: Changelog
+  - autorefs:
+      resolve_closest: true
   - mkdocstrings:
       handlers:
         python:
@@ -47,6 +101,7 @@ plugins:
 
 markdown_extensions:
   - admonition
+  - attr_list
   - pymdownx.details
   - pymdownx.snippets
   - pymdownx.superfences
