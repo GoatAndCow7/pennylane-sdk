@@ -20,7 +20,7 @@ from ._base_client import (
 )
 from ._exceptions import PennylaneError
 from ._throttle import AsyncRateThrottle, RateThrottle
-from .resources import company
+from .resources import company, firm
 
 __all__ = ["AsyncPennylane", "AsyncPennylaneFirm", "Pennylane", "PennylaneFirm"]
 
@@ -331,6 +331,33 @@ class PennylaneFirm:
             print(company.name)
     """
 
+    # Portfolio
+    companies: firm.FirmCompanies
+    # Accounting (every method takes company_id first)
+    fiscal_years: firm.FirmFiscalYears
+    trial_balance: firm.FirmTrialBalance
+    journals: firm.FirmJournals
+    ledger_accounts: firm.FirmLedgerAccounts
+    ledger_entries: firm.FirmLedgerEntries
+    ledger_entry_lines: firm.FirmLedgerEntryLines
+    # Exports and documents
+    exports: firm.FirmExports
+    dms: firm.FirmDms
+    file_attachments: firm.FirmFileAttachments
+    # Invoicing (read)
+    customer_invoices: firm.FirmCustomerInvoices
+    supplier_invoices: firm.FirmSupplierInvoices
+    customers: firm.FirmCustomers
+    suppliers: firm.FirmSuppliers
+    # Banking
+    bank_accounts: firm.FirmBankAccounts
+    transactions: firm.FirmTransactions
+    # Analytics
+    categories: firm.FirmCategories
+    category_groups: firm.FirmCategoryGroups
+    # Sync
+    changelogs: firm.FirmChangelogs
+
     def __init__(
         self,
         api_token: str | None = None,
@@ -354,8 +381,26 @@ class PennylaneFirm:
         self._attach_resources()
 
     def _attach_resources(self) -> None:
-        # Firm resources are attached once resources/firm is implemented.
-        pass
+        client = self._client
+        self.companies = firm.FirmCompanies(client)
+        self.fiscal_years = firm.FirmFiscalYears(client)
+        self.trial_balance = firm.FirmTrialBalance(client)
+        self.journals = firm.FirmJournals(client)
+        self.ledger_accounts = firm.FirmLedgerAccounts(client)
+        self.ledger_entries = firm.FirmLedgerEntries(client)
+        self.ledger_entry_lines = firm.FirmLedgerEntryLines(client)
+        self.exports = firm.FirmExports(client)
+        self.dms = firm.FirmDms(client)
+        self.file_attachments = firm.FirmFileAttachments(client)
+        self.customer_invoices = firm.FirmCustomerInvoices(client)
+        self.supplier_invoices = firm.FirmSupplierInvoices(client)
+        self.customers = firm.FirmCustomers(client)
+        self.suppliers = firm.FirmSuppliers(client)
+        self.bank_accounts = firm.FirmBankAccounts(client)
+        self.transactions = firm.FirmTransactions(client)
+        self.categories = firm.FirmCategories(client)
+        self.category_groups = firm.FirmCategoryGroups(client)
+        self.changelogs = firm.FirmChangelogs(client)
 
     @property
     def last_rate_limit(self) -> RateLimitInfo | None:
@@ -378,6 +423,33 @@ class AsyncPennylaneFirm:
 
     Same options as :class:`PennylaneFirm`.
     """
+
+    # Portfolio
+    companies: firm.AsyncFirmCompanies
+    # Accounting (every method takes company_id first)
+    fiscal_years: firm.AsyncFirmFiscalYears
+    trial_balance: firm.AsyncFirmTrialBalance
+    journals: firm.AsyncFirmJournals
+    ledger_accounts: firm.AsyncFirmLedgerAccounts
+    ledger_entries: firm.AsyncFirmLedgerEntries
+    ledger_entry_lines: firm.AsyncFirmLedgerEntryLines
+    # Exports and documents
+    exports: firm.AsyncFirmExports
+    dms: firm.AsyncFirmDms
+    file_attachments: firm.AsyncFirmFileAttachments
+    # Invoicing (read)
+    customer_invoices: firm.AsyncFirmCustomerInvoices
+    supplier_invoices: firm.AsyncFirmSupplierInvoices
+    customers: firm.AsyncFirmCustomers
+    suppliers: firm.AsyncFirmSuppliers
+    # Banking
+    bank_accounts: firm.AsyncFirmBankAccounts
+    transactions: firm.AsyncFirmTransactions
+    # Analytics
+    categories: firm.AsyncFirmCategories
+    category_groups: firm.AsyncFirmCategoryGroups
+    # Sync
+    changelogs: firm.AsyncFirmChangelogs
 
     def __init__(
         self,
@@ -402,8 +474,26 @@ class AsyncPennylaneFirm:
         self._attach_resources()
 
     def _attach_resources(self) -> None:
-        # Firm resources are attached once resources/firm is implemented.
-        pass
+        client = self._client
+        self.companies = firm.AsyncFirmCompanies(client)
+        self.fiscal_years = firm.AsyncFirmFiscalYears(client)
+        self.trial_balance = firm.AsyncFirmTrialBalance(client)
+        self.journals = firm.AsyncFirmJournals(client)
+        self.ledger_accounts = firm.AsyncFirmLedgerAccounts(client)
+        self.ledger_entries = firm.AsyncFirmLedgerEntries(client)
+        self.ledger_entry_lines = firm.AsyncFirmLedgerEntryLines(client)
+        self.exports = firm.AsyncFirmExports(client)
+        self.dms = firm.AsyncFirmDms(client)
+        self.file_attachments = firm.AsyncFirmFileAttachments(client)
+        self.customer_invoices = firm.AsyncFirmCustomerInvoices(client)
+        self.supplier_invoices = firm.AsyncFirmSupplierInvoices(client)
+        self.customers = firm.AsyncFirmCustomers(client)
+        self.suppliers = firm.AsyncFirmSuppliers(client)
+        self.bank_accounts = firm.AsyncFirmBankAccounts(client)
+        self.transactions = firm.AsyncFirmTransactions(client)
+        self.categories = firm.AsyncFirmCategories(client)
+        self.category_groups = firm.AsyncFirmCategoryGroups(client)
+        self.changelogs = firm.AsyncFirmChangelogs(client)
 
     @property
     def last_rate_limit(self) -> RateLimitInfo | None:

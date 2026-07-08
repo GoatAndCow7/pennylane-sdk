@@ -1,0 +1,93 @@
+site_name: pennylane-sdk
+site_description: Unofficial Python SDK for the Pennylane API (French accounting and invoicing platform)
+site_url: https://goatandcow7.github.io/pennylane-sdk/
+repo_url: https://github.com/GoatAndCow7/pennylane-sdk
+repo_name: GoatAndCow7/pennylane-sdk
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            show_signature_annotations: true
+            separate_signature: true
+            merge_init_into_class: true
+            members_order: source
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Guides:
+      - Authentication: guides/authentication.md
+      - Pagination and filtering: guides/pagination.md
+      - Errors, retries and rate limits: guides/errors-and-retries.md
+      - Invoicing lifecycle: guides/invoicing.md
+      - French e-invoicing (2026 reform): guides/e-invoicing.md
+      - Accounting operations: guides/accounting.md
+      - Firm API (accounting firms): guides/firm-api.md
+      - Webhooks: guides/webhooks.md
+      - OAuth 2.0 apps: guides/oauth.md
+  - API reference:
+      - Clients: api/clients.md
+      - Company resources:
+          - Invoicing (sales): api/company/invoicing.md
+          - Purchases: api/company/purchases.md
+          - Banking: api/company/banking.md
+          - Accounting: api/company/accounting.md
+          - Analytics (categories): api/company/analytics.md
+          - Exports: api/company/exports.md
+          - Payment mandates: api/company/mandates.md
+          - E-invoicing: api/company/e-invoicing.md
+          - Webhooks and misc: api/company/misc.md
+      - Firm resources: api/firm.md
+      - Errors: api/errors.md
+      - Pagination: api/pagination.md
+      - Filters: api/filters.md
+      - OAuth: api/oauth.md
+      - Webhook helpers: api/webhooks.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
