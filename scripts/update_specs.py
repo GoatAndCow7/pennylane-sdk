@@ -30,7 +30,7 @@ def main() -> int:
         print(f"Downloading {url} -> {target}")
         # readme.io rejects requests without a browser-like User-Agent (403).
         request = urllib.request.Request(url, headers={"User-Agent": "pennylane-sdk-tools/1.0"})
-        with urllib.request.urlopen(request, timeout=60) as response:  # noqa: S310
+        with urllib.request.urlopen(request, timeout=60) as response:
             raw = response.read()
         # Validate and pretty-print for readable diffs.
         spec = json.loads(raw)
