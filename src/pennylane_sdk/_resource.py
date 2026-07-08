@@ -15,7 +15,12 @@ from ._models import PennylaneModel
 
 if TYPE_CHECKING:
     from ._base_client import AsyncAPIClient, SyncAPIClient
-    from ._pagination import AsyncCursorPage, SyncCursorPage
+    from ._pagination import (
+        AsyncCursorPage,
+        AsyncNumberedPage,
+        SyncCursorPage,
+        SyncNumberedPage,
+    )
 
 __all__ = ["AsyncAPIResource", "SyncAPIResource"]
 
@@ -36,6 +41,15 @@ class SyncAPIResource:
         params: Mapping[str, Any] | None = None,
     ) -> SyncCursorPage[T]:
         return self._client.request_page(path, item_type=item_type, params=params)
+
+    def _get_numbered_page(
+        self,
+        path: str,
+        *,
+        item_type: type[T],
+        params: Mapping[str, Any] | None = None,
+    ) -> SyncNumberedPage[T]:
+        return self._client.request_numbered_page(path, item_type=item_type, params=params)
 
     def _get(
         self,
@@ -159,6 +173,17 @@ class AsyncAPIResource:
         params: Mapping[str, Any] | None = None,
     ) -> AsyncCursorPage[T]:
         return await self._client.request_page(path, item_type=item_type, params=params)
+
+    async def _get_numbered_page(
+        self,
+        path: str,
+        *,
+        item_type: type[T],
+        params: Mapping[str, Any] | None = None,
+    ) -> AsyncNumberedPage[T]:
+        return await self._client.request_numbered_page(
+            path, item_type=item_type, params=params
+        )
 
     async def _get(
         self,

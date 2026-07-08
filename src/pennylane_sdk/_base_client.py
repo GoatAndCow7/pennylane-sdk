@@ -34,7 +34,12 @@ from ._exceptions import (
     make_status_error,
 )
 from ._models import PennylaneModel, jsonable
-from ._pagination import AsyncCursorPage, SyncCursorPage
+from ._pagination import (
+    AsyncCursorPage,
+    AsyncNumberedPage,
+    SyncCursorPage,
+    SyncNumberedPage,
+)
 from ._throttle import AsyncRateThrottle, RateThrottle
 from ._version import __version__
 
@@ -268,6 +273,22 @@ class SyncAPIClient(BaseAPIClient):
             client=self, item_type=item_type, path=path, params=page_params, data=data
         )
 
+    def request_numbered_page(
+        self,
+        path: str,
+        *,
+        item_type: type[T],
+        params: Mapping[str, Any] | None = None,
+    ) -> SyncNumberedPage[T]:
+        """GET a page-number paginated endpoint (Firm API: page/per_page)."""
+        prepared = self.prepare_params(params)
+        payload = self._request_json("GET", path, params=prepared, _params_prepared=True)
+        page_params = {key: value for key, value in prepared.items() if key != "page"}
+        data = payload if isinstance(payload, dict) else {}
+        return SyncNumberedPage(
+            client=self, item_type=item_type, path=path, params=page_params, data=data
+        )
+
     # -- engine ---------------------------------------------------------------
 
     def _request_json(
@@ -429,6 +450,22 @@ class AsyncAPIClient(BaseAPIClient):
         page_params = {key: value for key, value in prepared.items() if key != "cursor"}
         data = payload if isinstance(payload, dict) else {}
         return AsyncCursorPage(
+            client=self, item_type=item_type, path=path, params=page_params, data=data
+        )
+
+    async def request_numbered_page(
+        self,
+        path: str,
+        *,
+        item_type: type[T],
+        params: Mapping[str, Any] | None = None,
+    ) -> AsyncNumberedPage[T]:
+        """GET a page-number paginated endpoint (Firm API: page/per_page)."""
+        prepared = self.prepare_params(params)
+        payload = await self._request_json("GET", path, params=prepared, _params_prepared=True)
+        page_params = {key: value for key, value in prepared.items() if key != "page"}
+        data = payload if isinstance(payload, dict) else {}
+        return AsyncNumberedPage(
             client=self, item_type=item_type, path=path, params=page_params, data=data
         )
 

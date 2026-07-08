@@ -120,3 +120,63 @@ class TestAsyncPagination:
         assert next_page is not None
         assert [p.id for p in next_page.items] == [2]
         assert await next_page.next_page() is None
+
+
+class TestSyncNumberedPagination:
+    @respx.mock
+    def test_auto_iteration_increments_page(self, sync_client: SyncAPIClient) -> None:
+        route = respx.get(f"{BASE_URL}/companies")
+        route.side_effect = [
+            httpx.Response(
+                200, json={"items": [{"id": 1}], "total_pages": 3, "current_page": 1}
+            ),
+            httpx.Response(
+                200, json={"items": [{"id": 2}], "total_pages": 3, "current_page": 2}
+            ),
+            httpx.Response(
+                200, json={"items": [{"id": 3}], "total_pages": 3, "current_page": 3}
+            ),
+        ]
+        page = sync_client.request_numbered_page(
+            "/companies", item_type=Product, params={"per_page": 1}
+        )
+        assert [p.id for p in page] == [1, 2, 3]
+        assert route.call_count == 3
+        second = route.calls[1].request
+        assert second.url.params["page"] == "2"
+        assert second.url.params["per_page"] == "1"
+
+    @respx.mock
+    def test_single_page_has_no_next(self, sync_client: SyncAPIClient) -> None:
+        respx.get(f"{BASE_URL}/companies").mock(
+            return_value=httpx.Response(
+                200, json={"items": [{"id": 1}], "total_pages": 1, "current_page": 1}
+            )
+        )
+        page = sync_client.request_numbered_page("/companies", item_type=Product)
+        assert page.has_more is False
+        assert page.next_page() is None
+
+    @respx.mock
+    def test_missing_pagination_fields_stop_iteration(self, sync_client: SyncAPIClient) -> None:
+        respx.get(f"{BASE_URL}/companies").mock(
+            return_value=httpx.Response(200, json={"items": [{"id": 1}]})
+        )
+        page = sync_client.request_numbered_page("/companies", item_type=Product)
+        assert [p.id for p in page] == [1]
+
+
+class TestAsyncNumberedPagination:
+    @respx.mock
+    async def test_auto_iteration(self, async_client: AsyncAPIClient) -> None:
+        route = respx.get(f"{BASE_URL}/companies")
+        route.side_effect = [
+            httpx.Response(
+                200, json={"items": [{"id": 1}], "total_pages": 2, "current_page": 1}
+            ),
+            httpx.Response(
+                200, json={"items": [{"id": 2}], "total_pages": 2, "current_page": 2}
+            ),
+        ]
+        page = await async_client.request_numbered_page("/companies", item_type=Product)
+        assert [p.id async for p in page] == [1, 2]

@@ -29,7 +29,12 @@ from ._exceptions import (
     ValidationError,
 )
 from ._models import Money, PennylaneModel
-from ._pagination import AsyncCursorPage, SyncCursorPage
+from ._pagination import (
+    AsyncCursorPage,
+    AsyncNumberedPage,
+    SyncCursorPage,
+    SyncNumberedPage,
+)
 from ._version import __version__
 
 __all__ = [
@@ -37,6 +42,7 @@ __all__ = [
     "APIStatusError",
     "APITimeoutError",
     "AsyncCursorPage",
+    "AsyncNumberedPage",
     "AsyncPennylane",
     "AsyncPennylaneFirm",
     "AuthenticationError",
@@ -53,6 +59,7 @@ __all__ = [
     "RateLimitInfo",
     "ServerError",
     "SyncCursorPage",
+    "SyncNumberedPage",
     "ValidationError",
     "__version__",
     "filters",
