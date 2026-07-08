@@ -66,3 +66,18 @@ jobs:
         with:
           name: dist
           path: dist/
+
+  # Single required status check for branch protection: green only when
+  # every job above succeeded.
+  ci-ok:
+    if: always()
+    needs: [lint, coverage-audit, test, docs, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that all jobs succeeded
+        run: |
+          results='${{ toJSON(needs.*.result) }}'
+          echo "$results"
+          if echo "$results" | grep -qE 'failure|cancelled'; then
+            exit 1
+          fi
