@@ -13,6 +13,25 @@ in both the sync and async resource classes.
   `create` (POST), `update` (PUT), `delete` (DELETE). Custom actions follow the path
   segment (`finalize`, `send_by_email`, `mark_as_paid`, `update_status`, …).
   `/import` and `/e_invoices/imports` endpoints → `import_from_file` / `import_e_invoice`.
+- Sub-resource endpoint naming (`<parent_id>` is the first positional argument):
+  | Endpoint pattern | Method name |
+  |---|---|
+  | GET `.../{id}/categories` | `list_categories(parent_id)` |
+  | PUT `.../{id}/categories` | `categorize(parent_id, categories=...)` |
+  | GET `.../{id}/appendices` | `list_appendices(parent_id)` |
+  | POST `.../{id}/appendices` | `add_appendix(parent_id, ...)` |
+  | GET `.../{id}/invoice_lines` | `list_invoice_lines(parent_id)` |
+  | GET `.../{id}/invoice_line_sections` | `list_invoice_line_sections(parent_id)` |
+  | GET `.../{id}/payments` | `list_payments(parent_id)` |
+  | GET `.../{id}/matched_transactions` | `list_matched_transactions(parent_id)` |
+  | POST `.../{id}/matched_transactions` | `match_transaction(parent_id, transaction_id)` |
+  | DELETE `.../{id}/matched_transactions/{tid}` | `unmatch_transaction(parent_id, transaction_id)` |
+  | GET `.../{id}/contacts` | `list_contacts(parent_id)` |
+  | GET `.../{id}/custom_header_fields` | `list_custom_header_fields(parent_id)` |
+- Required query parameters (e.g. `period_start` on `/trial_balance`) become required
+  keyword arguments; optional ones default to ``None``.
+- ``anyOf`` request bodies (e.g. draft vs finalized invoice): expose the union of the
+  variants' top-level fields as optional keyword arguments and document the variants.
 - Resource methods call `self._get / _get_page / _post / _put / _delete` with the path as
   an (f-)string literal starting with `/` (enforced by `scripts/check_coverage.py`).
 - List endpoints return `SyncCursorPage[T]` / `AsyncCursorPage[T]` via `self._get_page`.
