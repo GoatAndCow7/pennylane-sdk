@@ -29,6 +29,8 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - name: Every spec operation implemented (sync + async)
         run: uv run python scripts/check_coverage.py
+      - name: Sync/async twins are identical
+        run: uv run python scripts/check_parity.py
 
   test:
     runs-on: ${{ matrix.os }}

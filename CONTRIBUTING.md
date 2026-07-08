@@ -19,6 +19,7 @@ uv run pytest                              # tests (all mocked, no token needed)
 uv run mypy --strict src                   # type checking
 uv run ruff check src tests scripts       # lint
 uv run python scripts/check_coverage.py    # every API operation implemented?
+uv run python scripts/check_parity.py      # sync and Async twins identical?
 uv run mkdocs serve                        # docs live preview
 ```
 

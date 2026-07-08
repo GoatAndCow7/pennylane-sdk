@@ -177,6 +177,13 @@ class BaseAPIClient:
         delay = min(_INITIAL_BACKOFF * (1 << attempt), _MAX_BACKOFF)
         return delay + random.uniform(0, delay / 4)
 
+    def _can_retry_transport(self, method: str, attempt: int, request_sent: bool) -> bool:
+        if attempt >= self.max_retries:
+            return False
+        if not request_sent:
+            return True
+        return method in _IDEMPOTENT_METHODS
+
     def _track_response(self, response: httpx.Response) -> None:
         info = RateLimitInfo.from_response(response)
         if info is not None:
@@ -380,13 +387,6 @@ class SyncAPIClient(BaseAPIClient):
 
             raise make_status_error(response)
 
-    def _can_retry_transport(self, method: str, attempt: int, request_sent: bool) -> bool:
-        if attempt >= self.max_retries:
-            return False
-        if not request_sent:
-            return True
-        return method in _IDEMPOTENT_METHODS
-
 
 class AsyncAPIClient(BaseAPIClient):
     """Asynchronous HTTP engine (used by ``AsyncPennylane`` and ``AsyncPennylaneFirm``)."""
@@ -559,10 +559,3 @@ class AsyncAPIClient(BaseAPIClient):
                 continue
 
             raise make_status_error(response)
-
-    def _can_retry_transport(self, method: str, attempt: int, request_sent: bool) -> bool:
-        if attempt >= self.max_retries:
-            return False
-        if not request_sent:
-            return True
-        return method in _IDEMPOTENT_METHODS
