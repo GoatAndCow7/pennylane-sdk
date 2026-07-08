@@ -89,5 +89,7 @@ nav:
       - Filters: api/filters.md
       - OAuth: api/oauth.md
       - Webhook helpers: api/webhooks.md
-  - Contributing: contributing.md
+  - Contributing:
+      - How to contribute: contributing.md
+      - Design contract (resource map): design/resource-map.md
   - Changelog: changelog.md

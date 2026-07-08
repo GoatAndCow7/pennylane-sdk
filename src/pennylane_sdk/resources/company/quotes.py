@@ -147,12 +147,13 @@ class Quotes(SyncAPIResource):
         Scope: ``quotes:all``.
         Reference: https://pennylane.readme.io/reference/updatequote
 
+        See :meth:`create` for the other arguments.
+
         Args:
             invoice_lines: ``{"create": [...], "update": [...], "delete": [...]}``
                 add, update or delete invoice lines. ``update``/``delete`` entries
                 require an ``id``; ``create`` entries follow the same shape as in
                 :meth:`create`.
-            (see :meth:`create` for the other arguments)
         """
         body = drop_none(
             {

@@ -39,6 +39,8 @@ for invoice in client.customer_invoices.list(
 # Create and finalize an invoice
 invoice = client.customer_invoices.create(
     customer_id=123,
+    date="2026-07-08",
+    deadline="2026-08-07",
     invoice_lines=[{"product_id": 45, "quantity": "2"}],
 )
 client.customer_invoices.finalize(invoice.id)
