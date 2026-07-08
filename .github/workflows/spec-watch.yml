@@ -30,26 +30,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            {
-              echo "SPEC_DIFF<<EOF"
-              git diff --stat specs/
-              echo
-              echo '```'
-              git diff specs/ | head -300
-              echo '```'
-              echo "EOF"
-            } >> "$GITHUB_ENV"
           fi
-
-      - name: Coverage audit against the new specs
-        if: steps.diff.outputs.changed == 'true'
-        id: coverage
-        run: |
-          {
-            echo "COVERAGE<<EOF"
-            uv run python scripts/check_coverage.py || true
-            echo "EOF"
-          } >> "$GITHUB_ENV"
 
       - name: Open an issue (unless one is already open)
         if: steps.diff.outputs.changed == 'true'
@@ -63,19 +44,24 @@ jobs:
           fi
           gh label create spec-watch --repo "$GITHUB_REPOSITORY" --color FBCA04 \
             --description "Pennylane API spec changed" 2>/dev/null || true
+          {
+            echo "The weekly spec watch detected changes in the official Pennylane OpenAPI specs."
+            echo
+            echo "**Coverage audit against the new specs:**"
+            echo
+            echo '```'
+            uv run python scripts/check_coverage.py || true
+            echo '```'
+            echo
+            echo "**Spec diff (truncated to 300 lines):**"
+            echo
+            echo '```diff'
+            git diff specs/ | head -300
+            echo '```'
+            echo
+            echo "To update: run \`uv run python scripts/update_specs.py\`, implement anything reported as MISSING (see CONTRIBUTING.md), fix any UNKNOWN CALL, and commit the refreshed specs."
+          } > issue-body.md
           gh issue create --repo "$GITHUB_REPOSITORY" \
             --title "Pennylane API specs changed ($(date -u +%Y-%m-%d))" \
             --label spec-watch \
-            --body "The weekly spec watch detected changes in the official Pennylane OpenAPI specs.
-
-**Coverage audit against the new specs:**
-
-\`\`\`
-${COVERAGE}
-\`\`\`
-
-**Spec diff (truncated):**
-
-${SPEC_DIFF}
-
-To update: run \`uv run python scripts/update_specs.py\`, implement anything reported as MISSING (see CONTRIBUTING.md), fix any UNKNOWN CALL, and commit the refreshed specs."
+            --body-file issue-body.md
