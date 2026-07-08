@@ -5,8 +5,8 @@
 🇫🇷 [Version française](README.fr.md)
 
 [![CI](https://github.com/GoatAndCow7/pennylane-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/GoatAndCow7/pennylane-sdk/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/pennylane-sdk)](https://pypi.org/project/pennylane-sdk/)
-[![Python](https://img.shields.io/pypi/pyversions/pennylane-sdk)](https://pypi.org/project/pennylane-sdk/)
+[![PyPI](https://img.shields.io/pypi/v/pennylane-sdk?cacheSeconds=3600)](https://pypi.org/project/pennylane-sdk/)
+[![Python](https://img.shields.io/pypi/pyversions/pennylane-sdk?cacheSeconds=3600)](https://pypi.org/project/pennylane-sdk/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](LICENSE)
 
 **[Documentation](https://goatandcow7.github.io/pennylane-sdk/)** | [API coverage: 213/213 operations](#complete-api-coverage)
