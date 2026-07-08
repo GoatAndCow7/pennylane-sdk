@@ -1,0 +1,19 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "pennylane-sdk",
+  "description": "Unofficial Python SDK for the Pennylane API, the French accounting and invoicing platform. Complete Company API v2 and Firm API v1 coverage, sync and async, typed with Pydantic.",
+  "branch": "main",
+  "folders": ["docs", "examples"],
+  "excludeFolders": ["docs/design"],
+  "excludeFiles": ["changelog.md", "contributing.md"],
+  "rules": [
+    "Install with: pip install pennylane-sdk (import name: pennylane_sdk); the package is unrelated to the PennyLane quantum framework",
+    "Pass monetary amounts as Decimal or str, never float; response models expose them as Decimal",
+    "Iterating a list() result auto-paginates through every page under the built-in rate-limit throttle; do not write manual pagination loops or sleeps",
+    "Build filters with pennylane_sdk.filters helpers (filters.gte, filters.eq, filters.in_) passed as filter=[...]",
+    "Never wrap create calls in blind retry loops: the Pennylane API has no idempotency and the SDK already retries what is safe",
+    "Firm API methods (PennylaneFirm) take company_id as their first positional argument; Company API methods (Pennylane) do not",
+    "Ledger entry lines require BOTH debit and credit on every line, with the unused side set to \"0.00\"",
+    "Every exception derives from pennylane_sdk.PennylaneError; catch AuthenticationError, ValidationError, RateLimitError for specific handling"
+  ]
+}
