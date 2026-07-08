@@ -336,7 +336,8 @@ class FirmLedgerEntries(SyncAPIResource):
             journal_id: The journal ID where you want to create the ledger entry.
             ledger_entry_lines: Entry lines, each a dict with ``debit``,
                 ``credit`` (Money strings) and ``ledger_account_id``, plus an
-                optional ``label``. Must balance.
+                optional ``label``. The API requires BOTH debit and credit on
+                every line (set the unused side to ``"0.00"``). Must balance.
             file_attachment_id: File attachment ID.
             currency: ISO currency code applied to all lines (default EUR).
         """

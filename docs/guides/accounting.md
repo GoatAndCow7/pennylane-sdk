@@ -28,9 +28,9 @@ entry = client.ledger_entries.create(
     journal_id=12,
     label="Vente prestation",
     ledger_entry_lines=[
-        {"ledger_account_id": 411, "debit": Decimal("120.00")},
-        {"ledger_account_id": 706, "credit": Decimal("100.00")},
-        {"ledger_account_id": 445, "credit": Decimal("20.00")},
+        {"ledger_account_id": 411, "debit": Decimal("120.00"), "credit": Decimal("0.00")},
+        {"ledger_account_id": 706, "debit": Decimal("0.00"), "credit": Decimal("100.00")},
+        {"ledger_account_id": 445, "debit": Decimal("0.00"), "credit": Decimal("20.00")},
     ],
 )
 ```

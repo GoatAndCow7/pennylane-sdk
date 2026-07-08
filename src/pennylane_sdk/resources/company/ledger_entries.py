@@ -78,7 +78,9 @@ class LedgerEntries(SyncAPIResource):
             journal_id: The journal ID where you want to create the ledger entry.
             ledger_entry_lines: Entry lines, each a dict with ``debit``,
                 ``credit`` (Money strings) and ``ledger_account_id``, plus an
-                optional ``label``. Must balance. Max 1,000 lines per request.
+                optional ``label``. The API requires BOTH debit and credit on
+                every line (set the unused side to ``"0.00"``). Must balance.
+                Max 1,000 lines per request.
             due_date: Due date of the ledger entry (ISO 8601).
             ledger_attachment_id: Deprecated, use ``file_attachment_id`` instead.
             file_attachment_id: File attachment ID.
