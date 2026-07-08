@@ -1,0 +1,100 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pennylane-sdk"
+version = "0.1.0"
+description = "Unofficial Python SDK for the Pennylane API — the French accounting and invoicing platform"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Pennylane SDK Contributors" }]
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27,<1",
+    "pydantic>=2.7,<3",
+    "typing-extensions>=4.10",
+]
+keywords = ["pennylane", "accounting", "invoicing", "api", "sdk", "france", "facturation", "comptabilite", "factur-x", "e-invoicing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Natural Language :: French",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial :: Accounting",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/pennylane-sdk/pennylane-sdk"
+Documentation = "https://github.com/pennylane-sdk/pennylane-sdk#readme"
+Repository = "https://github.com/pennylane-sdk/pennylane-sdk"
+Changelog = "https://github.com/pennylane-sdk/pennylane-sdk/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.24",
+    "respx>=0.22",
+    "mypy>=1.11",
+    "ruff>=0.6",
+    "coverage[toml]>=7.5",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.26",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pennylane_sdk"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+    "PT",  # flake8-pytest-style
+    "C4",  # flake8-comprehensions
+]
+ignore = [
+    "E501", # line length is enforced by the formatter
+]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+files = ["src"]
+warn_unreachable = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["src/pennylane_sdk"]
+branch = true
+
+[tool.coverage.report]
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+]
