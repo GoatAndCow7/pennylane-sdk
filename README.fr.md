@@ -119,6 +119,10 @@ client.pa_registrations.list()
 
 Gestion des erreurs : une hiérarchie d'exceptions claire (`AuthenticationError`, `ValidationError` avec les détails métier, `RateLimitError` avec `retry_after`...). Voir le [guide des erreurs](https://goatandcow7.github.io/pennylane-sdk/guides/errors-and-retries/).
 
+## Avec un assistant IA
+
+La documentation est indexée sur [Context7](https://context7.com/goatandcow7/pennylane-sdk) : pointez votre assistant de code dessus et il connaîtra toute la référence du SDK avec ses règles d'usage. Elle existe aussi au format [llms.txt](https://goatandcow7.github.io/pennylane-sdk/llms.txt), et [AGENTS.md](AGENTS.md) résume les règles à respecter.
+
 ## Contribuer
 
 Les contributions sont bienvenues, en anglais de préférence pour le code et les issues. Voir [CONTRIBUTING.md](CONTRIBUTING.md).

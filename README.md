@@ -102,6 +102,10 @@ Coverage is not a promise: `scripts/check_coverage.py` verifies in CI that every
 - [Examples](examples/)
 - [Contributing](CONTRIBUTING.md)
 
+## Using with AI coding assistants
+
+The documentation is indexed on [Context7](https://context7.com/goatandcow7/pennylane-sdk): point your assistant at it and it gets the whole SDK reference with usage rules. The docs are also published as [llms.txt](https://goatandcow7.github.io/pennylane-sdk/llms.txt) / [llms-full.txt](https://goatandcow7.github.io/pennylane-sdk/llms-full.txt), and [AGENTS.md](AGENTS.md) sums up the ground rules any tool should follow.
+
 ## License
 
 [MIT](LICENSE). Build whatever you want with it.
