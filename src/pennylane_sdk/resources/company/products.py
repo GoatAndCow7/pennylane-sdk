@@ -71,7 +71,7 @@ class Products(SyncAPIResource):
         Args:
             label: Product label.
             price_before_tax: Price without taxes (``Decimal`` or string).
-            vat_rate: VAT rate code — a 20% French VAT is ``"FR_200"``.
+            vat_rate: VAT rate code: a 20% French VAT is ``"FR_200"``.
             description: Product description (max 5,000 characters).
             external_reference: Your own unique reference for this product.
             unit: Product unit.

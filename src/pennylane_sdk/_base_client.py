@@ -4,10 +4,10 @@ Responsibilities: authentication headers, query-parameter preparation
 (including filter encoding), JSON body serialization (Decimal/date aware),
 client-side throttling, automatic retries and defensive error parsing.
 
-Retry policy — designed for an accounting API with NO server-side idempotency
+Retry policy: designed for an accounting API with NO server-side idempotency
 (re-sending a create can produce a duplicate invoice or ledger entry):
 
-- 429 (rate limit): safe to retry for every method — the request was rejected
+- 429 (rate limit): safe to retry for every method: the request was rejected
   before being processed. Honors the ``retry-after`` header.
 - 500/502/503/504: retried only for idempotent methods (GET/PUT/DELETE).
   POST is NOT retried on 5xx because the server may have processed it.

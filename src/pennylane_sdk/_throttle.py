@@ -1,7 +1,7 @@
 """Client-side rate throttling (sliding window).
 
-The Pennylane API enforces strict rate limits — Company API: 25 requests per
-5 seconds, Firm API: 5 requests per second — applied per token. Both clients
+The Pennylane API enforces strict rate limits: Company API: 25 requests per
+5 seconds, Firm API: 5 requests per second: applied per token. Both clients
 therefore throttle outgoing requests by default (``auto_throttle=True``) so
 that bulk operations (auto-pagination, mass imports) never trip the limit.
 

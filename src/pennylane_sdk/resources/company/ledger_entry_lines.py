@@ -5,7 +5,7 @@ Reference: https://pennylane.readme.io/reference/getledgerentrylines
 
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any
 
 from ..._pagination import AsyncCursorPage, SyncCursorPage
 from ..._resource import AsyncAPIResource, SyncAPIResource
@@ -22,31 +22,6 @@ __all__ = ["AsyncLedgerEntryLines", "LedgerEntryLines"]
 class LedgerEntryLines(SyncAPIResource):
     """Read ledger entry lines and manage their lettering and analytical categories."""
 
-    def list(
-        self,
-        *,
-        cursor: str | None = None,
-        limit: int | None = None,
-        filter: FiltersInput | None = None,
-        sort: str | None = None,
-    ) -> SyncCursorPage[LedgerEntryLine]:
-        """List ledger entry lines.
-
-        Scope: ``ledger_entries:readonly``.
-        Reference: https://pennylane.readme.io/reference/getledgerentrylines
-
-        Args:
-            cursor: Pagination cursor from a previous page.
-            limit: Results per page.
-            filter: Conditions built with :mod:`pennylane_sdk.filters`.
-            sort: Sort field, prefixed with ``-`` for descending (default ``-id``).
-        """
-        return self._get_page(
-            "/ledger_entry_lines",
-            item_type=LedgerEntryLine,
-            params={"cursor": cursor, "limit": limit, "filter": filter, "sort": sort},
-        )
-
     def get(self, ledger_entry_line_id: int) -> LedgerEntryLine:
         """Retrieve a ledger entry line by its Pennylane identifier.
 
@@ -59,7 +34,7 @@ class LedgerEntryLines(SyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: List[dict[str, Any]],
+        ledger_entry_lines: list[dict[str, Any]],
     ) -> None:
         """Letter ledger entry lines together.
 
@@ -85,7 +60,7 @@ class LedgerEntryLines(SyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: List[dict[str, Any]],
+        ledger_entry_lines: list[dict[str, Any]],
     ) -> None:
         """Unletter ledger entry lines.
 
@@ -149,7 +124,7 @@ class LedgerEntryLines(SyncAPIResource):
         self,
         ledger_entry_line_id: int,
         *,
-        categories: List[dict[str, Any]],
+        categories: list[dict[str, Any]],
     ) -> CategorizedLedgerEntryLine:
         """Replace the analytical categories attached to a ledger entry line.
 
@@ -168,28 +143,34 @@ class LedgerEntryLines(SyncAPIResource):
             body=categories,
         )
 
-
-class AsyncLedgerEntryLines(AsyncAPIResource):
-    """Read ledger entry lines and manage their lettering and analytical categories (async)."""
-
-    async def list(
+    def list(
         self,
         *,
         cursor: str | None = None,
         limit: int | None = None,
         filter: FiltersInput | None = None,
         sort: str | None = None,
-    ) -> AsyncCursorPage[LedgerEntryLine]:
+    ) -> SyncCursorPage[LedgerEntryLine]:
         """List ledger entry lines.
 
         Scope: ``ledger_entries:readonly``.
         Reference: https://pennylane.readme.io/reference/getledgerentrylines
+
+        Args:
+            cursor: Pagination cursor from a previous page.
+            limit: Results per page.
+            filter: Conditions built with :mod:`pennylane_sdk.filters`.
+            sort: Sort field, prefixed with ``-`` for descending (default ``-id``).
         """
-        return await self._get_page(
+        return self._get_page(
             "/ledger_entry_lines",
             item_type=LedgerEntryLine,
             params={"cursor": cursor, "limit": limit, "filter": filter, "sort": sort},
         )
+
+
+class AsyncLedgerEntryLines(AsyncAPIResource):
+    """Read ledger entry lines and manage their lettering and analytical categories (async)."""
 
     async def get(self, ledger_entry_line_id: int) -> LedgerEntryLine:
         """Retrieve a ledger entry line by its Pennylane identifier.
@@ -205,7 +186,7 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: List[dict[str, Any]],
+        ledger_entry_lines: list[dict[str, Any]],
     ) -> None:
         """Letter ledger entry lines together.
 
@@ -226,7 +207,7 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: List[dict[str, Any]],
+        ledger_entry_lines: list[dict[str, Any]],
     ) -> None:
         """Unletter ledger entry lines.
 
@@ -285,7 +266,7 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
         self,
         ledger_entry_line_id: int,
         *,
-        categories: List[dict[str, Any]],
+        categories: list[dict[str, Any]],
     ) -> CategorizedLedgerEntryLine:
         """Replace the analytical categories attached to a ledger entry line.
 
@@ -302,4 +283,23 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
             f"/ledger_entry_lines/{ledger_entry_line_id}/categories",
             cast_to=CategorizedLedgerEntryLine,
             body=categories,
+        )
+
+    async def list(
+        self,
+        *,
+        cursor: str | None = None,
+        limit: int | None = None,
+        filter: FiltersInput | None = None,
+        sort: str | None = None,
+    ) -> AsyncCursorPage[LedgerEntryLine]:
+        """List ledger entry lines.
+
+        Scope: ``ledger_entries:readonly``.
+        Reference: https://pennylane.readme.io/reference/getledgerentrylines
+        """
+        return await self._get_page(
+            "/ledger_entry_lines",
+            item_type=LedgerEntryLine,
+            params={"cursor": cursor, "limit": limit, "filter": filter, "sort": sort},
         )

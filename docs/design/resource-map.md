@@ -1,4 +1,4 @@
-# Resource map — SDK design contract
+# Resource map: SDK design contract
 
 This document is the binding naming contract between the OpenAPI specs (`specs/`) and the
 SDK surface. Every implementer MUST follow it exactly so that the whole
@@ -7,6 +7,9 @@ in both the sync and async resource classes.
 
 ## Conventions
 
+- Writing style, everywhere (docstrings, comments, docs, commit messages): never use
+  em dashes or en dashes. Use plain punctuation instead: colons, commas, parentheses,
+  periods, or a simple hyphen. Keep the tone natural and human.
 - One module per top-level URL namespace (grouped where noted). Each module contains the
   sync class and its `Async*` twin, e.g. `CustomerInvoices` / `AsyncCustomerInvoices`.
 - Standard method names: `list` (GET collection → cursor page), `get` (GET one),
@@ -42,11 +45,11 @@ in both the sync and async resource classes.
 - Docstrings: English, one summary line, `Args:`/`Returns:` sections, the required OAuth
   scope, and the official reference URL (`https://pennylane.readme.io/reference/...`).
 - Beta endpoints (`Hidden` tag) and deprecated endpoints are implemented and documented
-  as such ("Beta — subject to change" / a `.. deprecated::` note).
+  as such ("Beta: subject to change" / a `.. deprecated::` note).
 
-## Company API (`Pennylane` / `AsyncPennylane`) — spec `specs/company_v2.json`
+## Company API (`Pennylane` / `AsyncPennylane`): spec `specs/company_v2.json`
 
-Base URL `https://app.pennylane.com/api/external/v2` — throttle 25 req / 5 s.
+Base URL `https://app.pennylane.com/api/external/v2`: throttle 25 req / 5 s.
 
 | Client attribute | Module `resources/company/` | Classes (sync) | Endpoints (path prefix) |
 |---|---|---|---|
@@ -72,13 +75,13 @@ Base URL `https://app.pennylane.com/api/external/v2` — throttle 25 req / 5 s.
 | `sepa_mandates`, `gocardless_mandates`, `pro_account` | `mandates.py` | `SepaMandates`, `GocardlessMandates`, `ProAccount` | `/sepa_mandates*`, `/gocardless_mandates*`, `/pro_account/*` |
 | `e_invoices`, `pa_registrations` | `e_invoices.py` | `EInvoices`, `PaRegistrations` | `/e-invoices/imports` (deprecated beta), `/pa_registrations` |
 | `file_attachments` | `file_attachments.py` | `FileAttachments` | `/file_attachments` (multipart) |
-| `changelogs` | `changelogs.py` | `Changelogs` | `/changelogs/{resource}` — one method per resource: `customer_invoices()`, `supplier_invoices()`, `customers()`, `suppliers()`, `products()`, `ledger_entry_lines()`, `transactions()`, `quotes()` |
+| `changelogs` | `changelogs.py` | `Changelogs` | `/changelogs/{resource}`: one method per resource: `customer_invoices()`, `supplier_invoices()`, `customers()`, `suppliers()`, `products()`, `ledger_entry_lines()`, `transactions()`, `quotes()` |
 | `webhook_subscriptions` | `webhook_subscriptions.py` | `WebhookSubscriptions` | `/webhook_subscriptions*` (beta/hidden) |
 | `me` | `me.py` | `Me` | `/me` (`retrieve()`) |
 
-## Firm API (`PennylaneFirm` / `AsyncPennylaneFirm`) — spec `specs/firm_v1.json`
+## Firm API (`PennylaneFirm` / `AsyncPennylaneFirm`): spec `specs/firm_v1.json`
 
-Base URL `https://app.pennylane.com/api/external/firm/v1` — throttle 5 req / 1 s.
+Base URL `https://app.pennylane.com/api/external/firm/v1`: throttle 5 req / 1 s.
 Every method takes `company_id: int` as its first positional argument, except the
 `companies` resource itself.
 
@@ -91,4 +94,4 @@ Every method takes `company_id: int` as its first positional argument, except th
 | `customer_invoices`, `supplier_invoices`, `customers`, `suppliers` | `invoicing.py` | `FirmCustomerInvoices`, `FirmSupplierInvoices`, `FirmCustomers`, `FirmSuppliers` | `/companies/{company_id}/customer_invoices*`, `/supplier_invoices*`, `/customers`, `/suppliers` |
 | `bank_accounts`, `transactions` | `banking.py` | `FirmBankAccounts`, `FirmTransactions` | `/companies/{company_id}/bank_accounts*`, `/transactions*` |
 | `categories`, `category_groups` | `categories.py` | `FirmCategories`, `FirmCategoryGroups` | `/companies/{company_id}/categories*`, `/category_groups*` |
-| `changelogs` | `changelogs.py` | `FirmChangelogs` | `/companies/{company_id}/changelogs/*` — methods `dms_files()`, `ledger_entry_lines()`, `supplier_invoices()`, `customer_invoices()` |
+| `changelogs` | `changelogs.py` | `FirmChangelogs` | `/companies/{company_id}/changelogs/*`: methods `dms_files()`, `ledger_entry_lines()`, `supplier_invoices()`, `customer_invoices()` |

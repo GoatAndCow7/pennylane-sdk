@@ -5,6 +5,7 @@ Reference: https://pennylane.readme.io/reference/gettransactions
 
 from __future__ import annotations
 
+import builtins
 from typing import Any
 
 from ..._models import MoneyInput, drop_none
@@ -126,8 +127,8 @@ class Transactions(SyncAPIResource):
         )
 
     def categorize(
-        self, transaction_id: int, *, categories: list[dict[str, Any]]
-    ) -> list[TransactionCategory]:
+        self, transaction_id: int, *, categories: builtins.list[dict[str, Any]]
+    ) -> builtins.list[TransactionCategory]:
         """Set the analytical categories of a bank transaction.
 
         Categories may belong to different category groups; the weights of
@@ -258,8 +259,8 @@ class AsyncTransactions(AsyncAPIResource):
         )
 
     async def categorize(
-        self, transaction_id: int, *, categories: list[dict[str, Any]]
-    ) -> list[TransactionCategory]:
+        self, transaction_id: int, *, categories: builtins.list[dict[str, Any]]
+    ) -> builtins.list[TransactionCategory]:
         """Set the analytical categories of a bank transaction.
 
         Categories may belong to different category groups; the weights of

@@ -1,6 +1,6 @@
 """Models for the Webhook Subscriptions resource (Company API v2).
 
-Beta — undocumented endpoints, subject to change.
+Beta: undocumented endpoints, subject to change.
 """
 
 from __future__ import annotations
@@ -15,11 +15,11 @@ __all__ = ["WebhookSubscription"]
 class WebhookSubscription(PennylaneModel):
     """A webhook subscription.
 
-    Beta — undocumented endpoint, subject to change.
+    Beta: undocumented endpoint, subject to change.
 
     ``secret`` is the HMAC signing secret; it is only ever returned by
     ``create`` and is ``None`` on every other response (``get``, ``list``,
-    ``update``). Store it when you receive it — it cannot be retrieved again.
+    ``update``). Store it when you receive it: it cannot be retrieved again.
 
     Reference: https://pennylane.readme.io/reference/postwebhooksubscriptions
     """

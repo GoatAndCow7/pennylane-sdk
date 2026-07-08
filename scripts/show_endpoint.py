@@ -4,7 +4,7 @@ Made for SDK implementers: dumps the query parameters, request body and
 response schema of an operation in a compact, readable form, with $refs
 resolved inline.
 
-Usage (leading slash optional — omit it in Git Bash on Windows, which would
+Usage (leading slash optional: omit it in Git Bash on Windows, which would
 otherwise rewrite the argument into a filesystem path):
     python scripts/show_endpoint.py company products get
     python scripts/show_endpoint.py company "customer_invoices/{id}/finalize" put
@@ -70,7 +70,7 @@ def _describe(schema: dict[str, Any], indent: int = 0) -> None:
         if "default" in prop:
             marks.append(f"default={prop['default']!r}")
         description = str(prop.get("description", ""))[:90].replace("\n", " ")
-        suffix = (" — " + description) if description else ""
+        suffix = (": " + description) if description else ""
         flags = (" [" + ", ".join(marks) + "]") if marks else ""
         if kind == "object":
             print(f"{pad}{name}: object{flags}{suffix}")

@@ -1,11 +1,13 @@
 """Webhook Subscriptions resource (Company API v2).
 
-Beta — undocumented endpoints, subject to change.
+Beta: undocumented endpoints, subject to change.
 
 Reference: https://pennylane.readme.io/reference/postwebhooksubscriptions
 """
 
 from __future__ import annotations
+
+import builtins
 
 from ..._models import drop_none
 from ..._pagination import AsyncCursorPage, SyncCursorPage
@@ -18,7 +20,7 @@ __all__ = ["AsyncWebhookSubscriptions", "WebhookSubscriptions"]
 class WebhookSubscriptions(SyncAPIResource):
     """Manage webhook subscriptions.
 
-    Beta — subject to change.
+    Beta: subject to change.
     """
 
     def list(
@@ -29,7 +31,7 @@ class WebhookSubscriptions(SyncAPIResource):
     ) -> SyncCursorPage[WebhookSubscription]:
         """List webhook subscriptions.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/getwebhooksubscriptions
 
@@ -46,7 +48,7 @@ class WebhookSubscriptions(SyncAPIResource):
     def get(self, webhook_subscription_id: int) -> WebhookSubscription:
         """Retrieve a webhook subscription.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/getwebhooksubscription
         """
@@ -58,16 +60,16 @@ class WebhookSubscriptions(SyncAPIResource):
         self,
         *,
         callback_url: str,
-        events: list[str],
+        events: builtins.list[str],
         enabled: bool | None = None,
     ) -> WebhookSubscription:
         """Create a webhook subscription.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         The response's ``secret`` field is the HMAC signing secret for
         verifying webhook deliveries. It is generated automatically and
-        returned **only in this creation response** — store it immediately,
+        returned **only in this creation response**: store it immediately,
         it cannot be retrieved again afterwards.
 
         Reference: https://pennylane.readme.io/reference/postwebhooksubscriptions
@@ -91,12 +93,12 @@ class WebhookSubscriptions(SyncAPIResource):
         webhook_subscription_id: int,
         *,
         callback_url: str | None = None,
-        events: list[str] | None = None,
+        events: builtins.list[str] | None = None,
         enabled: bool | None = None,
     ) -> WebhookSubscription:
         """Update a webhook subscription. Only the provided fields are modified.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/putwebhooksubscription
         """
@@ -116,7 +118,7 @@ class WebhookSubscriptions(SyncAPIResource):
     def delete(self, webhook_subscription_id: int) -> None:
         """Delete a webhook subscription.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/deletewebhooksubscription
         """
@@ -126,7 +128,7 @@ class WebhookSubscriptions(SyncAPIResource):
 class AsyncWebhookSubscriptions(AsyncAPIResource):
     """Manage webhook subscriptions (async).
 
-    Beta — subject to change.
+    Beta: subject to change.
     """
 
     async def list(
@@ -137,7 +139,7 @@ class AsyncWebhookSubscriptions(AsyncAPIResource):
     ) -> AsyncCursorPage[WebhookSubscription]:
         """List webhook subscriptions.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/getwebhooksubscriptions
         """
@@ -150,7 +152,7 @@ class AsyncWebhookSubscriptions(AsyncAPIResource):
     async def get(self, webhook_subscription_id: int) -> WebhookSubscription:
         """Retrieve a webhook subscription.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/getwebhooksubscription
         """
@@ -162,16 +164,16 @@ class AsyncWebhookSubscriptions(AsyncAPIResource):
         self,
         *,
         callback_url: str,
-        events: list[str],
+        events: builtins.list[str],
         enabled: bool | None = None,
     ) -> WebhookSubscription:
         """Create a webhook subscription.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         The response's ``secret`` field is the HMAC signing secret for
         verifying webhook deliveries. It is generated automatically and
-        returned **only in this creation response** — store it immediately,
+        returned **only in this creation response**: store it immediately,
         it cannot be retrieved again afterwards.
 
         Reference: https://pennylane.readme.io/reference/postwebhooksubscriptions
@@ -190,12 +192,12 @@ class AsyncWebhookSubscriptions(AsyncAPIResource):
         webhook_subscription_id: int,
         *,
         callback_url: str | None = None,
-        events: list[str] | None = None,
+        events: builtins.list[str] | None = None,
         enabled: bool | None = None,
     ) -> WebhookSubscription:
         """Update a webhook subscription. Only the provided fields are modified.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/putwebhooksubscription
         """
@@ -215,7 +217,7 @@ class AsyncWebhookSubscriptions(AsyncAPIResource):
     async def delete(self, webhook_subscription_id: int) -> None:
         """Delete a webhook subscription.
 
-        Beta — subject to change.
+        Beta: subject to change.
 
         Reference: https://pennylane.readme.io/reference/deletewebhooksubscription
         """

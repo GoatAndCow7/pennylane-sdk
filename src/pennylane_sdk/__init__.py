@@ -11,7 +11,7 @@ This project is not affiliated with Pennylane SAS, and is unrelated to the
 PennyLane quantum computing framework.
 """
 
-from . import filters
+from . import filters, oauth, webhooks
 from ._base_client import RateLimitInfo
 from ._client import AsyncPennylane, AsyncPennylaneFirm, Pennylane, PennylaneFirm
 from ._exceptions import (
@@ -56,4 +56,6 @@ __all__ = [
     "ValidationError",
     "__version__",
     "filters",
+    "oauth",
+    "webhooks",
 ]

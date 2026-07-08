@@ -5,6 +5,8 @@ Reference: https://pennylane.readme.io/reference/getsepamandates
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from ..._models import drop_none
 from ..._pagination import AsyncCursorPage, SyncCursorPage
 from ..._resource import AsyncAPIResource, SyncAPIResource
@@ -184,7 +186,7 @@ class GocardlessMandates(SyncAPIResource):
         self,
         *,
         customer_id: int,
-        recipients: list[str],
+        recipients: Sequence[str],
         subject: str | None = None,
         body: str | None = None,
     ) -> None:
@@ -469,7 +471,7 @@ class AsyncGocardlessMandates(AsyncAPIResource):
         self,
         *,
         customer_id: int,
-        recipients: list[str],
+        recipients: Sequence[str],
         subject: str | None = None,
         body: str | None = None,
     ) -> None:

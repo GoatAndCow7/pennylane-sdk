@@ -5,7 +5,7 @@ apps (https://pennylane.readme.io/docs/oauth-20-walkthrough):
 
 1. Send the user to :meth:`OAuthApp.authorization_url`.
 2. Exchange the received code with :meth:`OAuthApp.exchange_code`.
-3. Use ``Pennylane(api_token=tokens.access_token)`` — access tokens expire
+3. Use ``Pennylane(api_token=tokens.access_token)``: access tokens expire
    after 24 hours (``expires_in=86400``).
 4. Refresh with :meth:`OAuthApp.refresh`.
 
@@ -140,7 +140,7 @@ class OAuthApp(_BaseOAuthApp):
         return self._parse_tokens(response)
 
     def refresh(self, refresh_token: str) -> OAuthTokens:
-        """Get a new token pair (serialized — see Refresh Token Rotation).
+        """Get a new token pair (serialized: see Refresh Token Rotation).
 
         Persist the returned pair immediately: the pair you passed in is now
         invalid.
@@ -192,7 +192,7 @@ class AsyncOAuthApp(_BaseOAuthApp):
         return self._parse_tokens(response)
 
     async def refresh(self, refresh_token: str) -> OAuthTokens:
-        """Get a new token pair (serialized — see Refresh Token Rotation).
+        """Get a new token pair (serialized: see Refresh Token Rotation).
 
         Persist the returned pair immediately: the pair you passed in is now
         invalid.

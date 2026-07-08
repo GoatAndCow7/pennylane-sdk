@@ -154,7 +154,7 @@ def main() -> int:
                 tags = "".join(
                     f" [{t}]" for t, cond in (("hidden", op.hidden), ("deprecated", op.deprecated)) if cond
                 )
-                print(f"  MISSING ({'+'.join(halves)}) {op.method} {op.path}{tags} — {op.summary}")
+                print(f"  MISSING ({'+'.join(halves)}) {op.method} {op.path}{tags}: {op.summary}")
         if report.unknown_calls:
             ok = False
             for file, method, path in report.unknown_calls:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import datetime as dt
 
-from pydantic import model_validator
+from pydantic import Field, model_validator
 
 from ..._models import Money, PennylaneModel
 
@@ -91,12 +91,12 @@ class TransactionCategory(PennylaneModel):
 class TransactionCategoriesResponse(PennylaneModel):
     """Response of the categorize endpoint (a bare JSON array of categories).
 
-    Not an API object in its own right — a thin wrapper so the bare JSON
+    Not an API object in its own right: a thin wrapper so the bare JSON
     array returned by ``PUT /transactions/{id}/categories`` can be parsed
     through the standard ``cast_to`` machinery.
     """
 
-    items: list[TransactionCategory] = []
+    items: list[TransactionCategory] = Field(default_factory=list)
 
     @model_validator(mode="before")
     @classmethod

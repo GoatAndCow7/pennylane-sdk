@@ -5,6 +5,7 @@ Reference: https://pennylane.readme.io/reference/getledgerentries
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any
 
 from ..._files import FileInput, to_httpx_file
@@ -59,7 +60,7 @@ class LedgerEntries(SyncAPIResource):
         date: str,
         label: str,
         journal_id: int,
-        ledger_entry_lines: list[dict[str, Any]],
+        ledger_entry_lines: Sequence[dict[str, Any]],
         due_date: str | None = None,
         ledger_attachment_id: int | None = None,
         file_attachment_id: int | None = None,
@@ -233,7 +234,7 @@ class AsyncLedgerEntries(AsyncAPIResource):
         date: str,
         label: str,
         journal_id: int,
-        ledger_entry_lines: list[dict[str, Any]],
+        ledger_entry_lines: Sequence[dict[str, Any]],
         due_date: str | None = None,
         ledger_attachment_id: int | None = None,
         file_attachment_id: int | None = None,

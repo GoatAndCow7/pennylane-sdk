@@ -27,13 +27,13 @@ class EInvoices(SyncAPIResource):
 
         .. deprecated:: Pennylane has deprecated this endpoint.
 
-        Beta — undocumented endpoint, subject to change.
+        Beta: undocumented endpoint, subject to change.
 
         Scope: ``e_invoices:all``.
         Reference: https://pennylane.readme.io/reference/createeinvoiceimport
 
         Args:
-            file: The invoice file to import — a Factur-X PDF, a UBL XML
+            file: The invoice file to import: a Factur-X PDF, a UBL XML
                 invoice, or a CII XML invoice.
             type: The type of the invoice, ``"customer"`` or ``"supplier"``.
             filename: Overrides the filename sent to the API.
@@ -72,7 +72,7 @@ class AsyncEInvoices(AsyncAPIResource):
 
         .. deprecated:: Pennylane has deprecated this endpoint.
 
-        Beta — undocumented endpoint, subject to change.
+        Beta: undocumented endpoint, subject to change.
 
         Scope: ``e_invoices:all``.
         Reference: https://pennylane.readme.io/reference/createeinvoiceimport

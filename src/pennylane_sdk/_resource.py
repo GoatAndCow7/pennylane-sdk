@@ -3,7 +3,7 @@
 Resource classes (``client.customer_invoices``, ``client.products``...) are
 thin wrappers around the HTTP engine. They inherit these bases and use the
 ``_get / _get_page / _post / _put / _delete`` helpers with the endpoint path
-as a string literal — a convention audited by ``scripts/check_coverage.py``.
+as a string literal: a convention audited by ``scripts/check_coverage.py``.
 """
 
 from __future__ import annotations

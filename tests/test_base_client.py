@@ -164,7 +164,7 @@ class TestRetries:
 
     @respx.mock
     def test_500_post_is_not_retried(self, sync_client: SyncAPIClient) -> None:
-        """POST must NOT be retried on 5xx: no server-side idempotency —
+        """POST must NOT be retried on 5xx: no server-side idempotency
         a retry could create a duplicate invoice."""
         route = respx.post(f"{BASE_URL}/things")
         route.mock(return_value=httpx.Response(500, json={"error": "boom"}))

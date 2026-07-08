@@ -5,6 +5,7 @@ Reference: https://pennylane.readme.io/reference/getquotes
 
 from __future__ import annotations
 
+import builtins
 import datetime as dt
 from typing import Any
 
@@ -65,7 +66,7 @@ class Quotes(SyncAPIResource):
         date: dt.date | str,
         deadline: dt.date | str,
         customer_id: int,
-        invoice_lines: list[dict[str, Any]],
+        invoice_lines: builtins.list[dict[str, Any]],
         quote_template_id: int | None = None,
         pdf_invoice_free_text: str | None = None,
         pdf_invoice_subject: str | None = None,
@@ -74,7 +75,7 @@ class Quotes(SyncAPIResource):
         special_mention: str | None = None,
         language: str | None = None,
         discount: dict[str, Any] | None = None,
-        invoice_line_sections: list[dict[str, Any]] | None = None,
+        invoice_line_sections: builtins.list[dict[str, Any]] | None = None,
         external_reference: str | None = None,
     ) -> Quote:
         """Create a quote.
@@ -147,7 +148,7 @@ class Quotes(SyncAPIResource):
         Reference: https://pennylane.readme.io/reference/updatequote
 
         Args:
-            invoice_lines: ``{"create": [...], "update": [...], "delete": [...]}`` —
+            invoice_lines: ``{"create": [...], "update": [...], "delete": [...]}``
                 add, update or delete invoice lines. ``update``/``delete`` entries
                 require an ``id``; ``create`` entries follow the same shape as in
                 :meth:`create`.
@@ -185,7 +186,7 @@ class Quotes(SyncAPIResource):
             f"/quotes/{quote_id}/update_status", cast_to=Quote, body={"status": status}
         )
 
-    def send_by_email(self, quote_id: int, *, recipients: list[str] | None = None) -> None:
+    def send_by_email(self, quote_id: int, *, recipients: builtins.list[str] | None = None) -> None:
         """Send a quote by email.
 
         Scope: ``quotes:all``.
@@ -310,7 +311,7 @@ class AsyncQuotes(AsyncAPIResource):
         date: dt.date | str,
         deadline: dt.date | str,
         customer_id: int,
-        invoice_lines: list[dict[str, Any]],
+        invoice_lines: builtins.list[dict[str, Any]],
         quote_template_id: int | None = None,
         pdf_invoice_free_text: str | None = None,
         pdf_invoice_subject: str | None = None,
@@ -319,7 +320,7 @@ class AsyncQuotes(AsyncAPIResource):
         special_mention: str | None = None,
         language: str | None = None,
         discount: dict[str, Any] | None = None,
-        invoice_line_sections: list[dict[str, Any]] | None = None,
+        invoice_line_sections: builtins.list[dict[str, Any]] | None = None,
         external_reference: str | None = None,
     ) -> Quote:
         """Create a quote.
@@ -399,7 +400,7 @@ class AsyncQuotes(AsyncAPIResource):
             f"/quotes/{quote_id}/update_status", cast_to=Quote, body={"status": status}
         )
 
-    async def send_by_email(self, quote_id: int, *, recipients: list[str] | None = None) -> None:
+    async def send_by_email(self, quote_id: int, *, recipients: builtins.list[str] | None = None) -> None:
         """Send a quote by email.
 
         Scope: ``quotes:all``.

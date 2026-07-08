@@ -2,9 +2,9 @@
 
 Every error raised by the SDK derives from :class:`PennylaneError`:
 
-- :class:`APIConnectionError` / :class:`APITimeoutError` — the request never
+- :class:`APIConnectionError` / :class:`APITimeoutError`: the request never
   produced an HTTP response (network failure, DNS, timeout).
-- :class:`APIStatusError` — the API answered with a 4xx/5xx status. One
+- :class:`APIStatusError`: the API answered with a 4xx/5xx status. One
   subclass exists per documented status code (:class:`AuthenticationError`,
   :class:`RateLimitError`, ...).
 
@@ -89,31 +89,31 @@ class APIStatusError(PennylaneError):
 
 
 class BadRequestError(APIStatusError):
-    """400 — malformed JSON, wrong types or unsupported fields."""
+    """400: malformed JSON, wrong types or unsupported fields."""
 
 
 class AuthenticationError(APIStatusError):
-    """401 — missing, invalid or expired API token."""
+    """401: missing, invalid or expired API token."""
 
 
 class PermissionDeniedError(APIStatusError):
-    """403 — the token lacks the required scope for this endpoint."""
+    """403: the token lacks the required scope for this endpoint."""
 
 
 class NotFoundError(APIStatusError):
-    """404 — the resource does not exist or is not accessible."""
+    """404: the resource does not exist or is not accessible."""
 
 
 class ConflictError(APIStatusError):
-    """409 — conflict, e.g. a duplicate of an existing document."""
+    """409: conflict, e.g. a duplicate of an existing document."""
 
 
 class ValidationError(APIStatusError):
-    """422 — the request is well-formed but fails business validation."""
+    """422: the request is well-formed but fails business validation."""
 
 
 class RateLimitError(APIStatusError):
-    """429 — rate limit exceeded (Company: 25 req/5s, Firm: 5 req/s).
+    """429: rate limit exceeded (Company: 25 req/5s, Firm: 5 req/s).
 
     Attributes:
         retry_after: Seconds to wait before retrying, from the
@@ -136,7 +136,7 @@ class RateLimitError(APIStatusError):
 
 
 class ServerError(APIStatusError):
-    """5xx — transient Pennylane server error (500, 503...)."""
+    """5xx: transient Pennylane server error (500, 503...)."""
 
 
 _STATUS_TO_ERROR: dict[int, type[APIStatusError]] = {

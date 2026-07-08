@@ -36,10 +36,10 @@ def main() -> int:
         spec = json.loads(raw)
         n_paths = len(spec.get("paths", {}))
         if n_paths == 0:
-            print(f"ERROR: {filename} contains no paths — refusing to overwrite", file=sys.stderr)
+            print(f"ERROR: {filename} contains no paths: refusing to overwrite", file=sys.stderr)
             return 1
         target.write_text(json.dumps(spec, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"  OK: {spec['info']['title']} v{spec['info']['version']} — {n_paths} paths")
+        print(f"  OK: {spec['info']['title']} v{spec['info']['version']}: {n_paths} paths")
     return 0
 
 

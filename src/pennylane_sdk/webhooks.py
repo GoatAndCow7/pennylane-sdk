@@ -3,7 +3,7 @@
 Pennylane webhooks (beta) POST a JSON payload to your HTTPS endpoint when an
 event occurs. When you create a subscription
 (``client.webhook_subscriptions.create``), the response contains a ``secret``
-— returned only once — used to sign deliveries with an HMAC.
+returned only once: used to sign deliveries with an HMAC.
 
 .. warning::
    As of mid-2026 Pennylane documents the HMAC secret but NOT the exact
@@ -72,7 +72,7 @@ def verify_signature(payload: bytes | str, signature: str, secret: str) -> bool:
     """Check a webhook delivery signature (constant-time comparison).
 
     Args:
-        payload: The RAW request body, exactly as received (bytes preferred —
+        payload: The RAW request body, exactly as received (bytes preferred
             re-serializing the JSON would change the bytes and the HMAC).
         signature: Value of the signature header of the delivery.
         secret: The subscription secret returned at creation time.
