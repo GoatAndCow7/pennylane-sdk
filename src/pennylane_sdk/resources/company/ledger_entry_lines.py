@@ -5,7 +5,7 @@ Reference: https://pennylane.readme.io/reference/getledgerentrylines
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, List
 
 from ..._pagination import AsyncCursorPage, SyncCursorPage
 from ..._resource import AsyncAPIResource, SyncAPIResource
@@ -59,7 +59,7 @@ class LedgerEntryLines(SyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: list[dict[str, Any]],
+        ledger_entry_lines: List[dict[str, Any]],
     ) -> None:
         """Letter ledger entry lines together.
 
@@ -85,7 +85,7 @@ class LedgerEntryLines(SyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: list[dict[str, Any]],
+        ledger_entry_lines: List[dict[str, Any]],
     ) -> None:
         """Unletter ledger entry lines.
 
@@ -149,7 +149,7 @@ class LedgerEntryLines(SyncAPIResource):
         self,
         ledger_entry_line_id: int,
         *,
-        categories: list[dict[str, Any]],
+        categories: List[dict[str, Any]],
     ) -> CategorizedLedgerEntryLine:
         """Replace the analytical categories attached to a ledger entry line.
 
@@ -205,7 +205,7 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: list[dict[str, Any]],
+        ledger_entry_lines: List[dict[str, Any]],
     ) -> None:
         """Letter ledger entry lines together.
 
@@ -226,7 +226,7 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
         self,
         *,
         unbalanced_lettering_strategy: str,
-        ledger_entry_lines: list[dict[str, Any]],
+        ledger_entry_lines: List[dict[str, Any]],
     ) -> None:
         """Unletter ledger entry lines.
 
@@ -285,7 +285,7 @@ class AsyncLedgerEntryLines(AsyncAPIResource):
         self,
         ledger_entry_line_id: int,
         *,
-        categories: list[dict[str, Any]],
+        categories: List[dict[str, Any]],
     ) -> CategorizedLedgerEntryLine:
         """Replace the analytical categories attached to a ledger entry line.
 

@@ -14,6 +14,7 @@ __all__ = [
     "MandateMigrationCandidate",
     "MandateMigrationCustomer",
     "MandateMigrationMandate",
+    "MandateMigrationResponse",
     "ProAccountMandate",
     "SepaMandate",
 ]
@@ -118,6 +119,17 @@ class MandateMigration(PennylaneModel):
     updated_at: dt.datetime | None = None
     mandate: MandateMigrationMandate | None = None
     customer: MandateMigrationCustomer | None = None
+
+
+class MandateMigrationResponse(PennylaneModel):
+    """Response of ``POST /pro_account/mandate_migrations``.
+
+    Not an API object in its own right — a thin wrapper so the
+    ``{"mandate_migration": {...}}`` envelope can be parsed through the
+    standard ``cast_to`` machinery.
+    """
+
+    mandate_migration: MandateMigration
 
 
 class ProAccountMandate(PennylaneModel):

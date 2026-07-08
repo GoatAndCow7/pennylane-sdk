@@ -13,6 +13,7 @@ from ...types.company.mandates import (
     GocardlessMandate,
     MandateMigration,
     MandateMigrationCandidate,
+    MandateMigrationResponse,
     ProAccountMandate,
     SepaMandate,
 )
@@ -301,9 +302,10 @@ class ProAccount(SyncAPIResource):
                 "early_execution_date_permitted": early_execution_date_permitted,
             }
         )
-        return self._post(
-            "/pro_account/mandate_migrations", cast_to=MandateMigration, body=body
+        response = self._post(
+            "/pro_account/mandate_migrations", cast_to=MandateMigrationResponse, body=body
         )
+        return response.mandate_migration
 
     def list_mandates(
         self,
@@ -562,9 +564,10 @@ class AsyncProAccount(AsyncAPIResource):
                 "early_execution_date_permitted": early_execution_date_permitted,
             }
         )
-        return await self._post(
-            "/pro_account/mandate_migrations", cast_to=MandateMigration, body=body
+        response = await self._post(
+            "/pro_account/mandate_migrations", cast_to=MandateMigrationResponse, body=body
         )
+        return response.mandate_migration
 
     async def list_mandates(
         self,
