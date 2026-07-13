@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pennylane-sdk"
-version = "0.1.0"
+version = "0.2.0"
 description = "Unofficial Python SDK for the Pennylane API, the French accounting and invoicing platform"
 readme = "README.md"
 license = "MIT"

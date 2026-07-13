@@ -149,6 +149,8 @@ class CustomerInvoice(PennylaneModel):
     external_reference: str | None = None
     e_invoicing: CustomerInvoiceEInvoicing | None = None
     factur_x: bool | None = None
+    schematron_validation_status: str | None = None
+    """Schematron validation result for Factur-X invoices: pending, valid or invalid."""
     archived_at: dt.datetime | None = None
     created_at: dt.datetime | None = None
     updated_at: dt.datetime | None = None

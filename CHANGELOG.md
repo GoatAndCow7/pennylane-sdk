@@ -4,6 +4,25 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-13
+
+### Added
+
+- `client.changelogs.ledger_entries_categories()` and
+  `client.changelogs.ledger_entry_lines_categories()`: new category change
+  event feeds added by Pennylane.
+- `CustomerInvoice.schematron_validation_status`: Schematron validation
+  result for Factur-X invoices (pending, valid or invalid).
+
+### Changed
+
+- Changelog endpoints now accept up to 1000 items per page (was 100).
+
+### Fixed
+
+- The integration test suite no longer skips the whole unit suite when
+  PENNYLANE_API_TOKEN is not set.
+
 ## [0.1.0] - 2026-07-08
 
 Initial release.

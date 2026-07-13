@@ -61,3 +61,54 @@ class TestAsyncChangelogs:
         method = getattr(AsyncChangelogs(async_client), resource)
         page = await method()
         assert page.items[0].id == 42
+
+
+class TestCategoryChangelogs:
+    @respx.mock
+    def test_ledger_entries_categories(self, sync_client: SyncAPIClient) -> None:
+        route = respx.get(f"{BASE_URL}/changelogs/ledger_entries_categories").mock(
+            return_value=httpx.Response(
+                200,
+                json={
+                    "items": [
+                        {
+                            "id": 7,
+                            "operation": "insert",
+                            "ledger_entry": {"id": 42, "type": "ledger_entry"},
+                            "processed_at": "2026-07-10T08:00:00Z",
+                        }
+                    ],
+                    "has_more": False,
+                    "next_cursor": None,
+                },
+            )
+        )
+        page = Changelogs(sync_client).ledger_entries_categories(limit=500)
+        assert route.calls.last.request.url.params["limit"] == "500"
+        event = page.items[0]
+        assert event.id == 7
+        assert event.operation == "insert"
+
+    @respx.mock
+    def test_ledger_entry_lines_categories(self, sync_client: SyncAPIClient) -> None:
+        respx.get(f"{BASE_URL}/changelogs/ledger_entry_lines_categories").mock(
+            return_value=httpx.Response(
+                200, json={"items": [], "has_more": False, "next_cursor": None}
+            )
+        )
+        page = Changelogs(sync_client).ledger_entry_lines_categories(
+            start_date=dt.date(2026, 7, 1)
+        )
+        assert page.items == []
+
+    @respx.mock
+    async def test_async_ledger_entries_categories(
+        self, async_client: AsyncAPIClient
+    ) -> None:
+        respx.get(f"{BASE_URL}/changelogs/ledger_entries_categories").mock(
+            return_value=httpx.Response(
+                200, json={"items": [], "has_more": False, "next_cursor": None}
+            )
+        )
+        page = await AsyncChangelogs(async_client).ledger_entries_categories()
+        assert page.items == []
