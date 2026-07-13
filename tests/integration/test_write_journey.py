@@ -9,6 +9,7 @@ Only run this against a SANDBOX company.
 
 from __future__ import annotations
 
+import datetime as dt
 import uuid
 from decimal import Decimal
 
@@ -17,6 +18,8 @@ import pytest
 from pennylane_sdk import Pennylane
 
 RUN_TAG = f"sdk-it-{uuid.uuid4().hex[:8]}"
+TODAY = dt.date.today()
+DEADLINE = TODAY + dt.timedelta(days=30)
 
 
 @pytest.fixture(scope="module")
@@ -72,8 +75,8 @@ def test_invoice_draft_to_finalized(live_client: Pennylane, run_tag: str) -> Non
     )
     draft = live_client.customer_invoices.create(
         customer_id=customer.id,
-        date="2026-07-09",
-        deadline="2026-08-08",
+        date=TODAY,
+        deadline=DEADLINE,
         invoice_lines=[
             {
                 "label": f"Integration line {run_tag}",
@@ -109,8 +112,8 @@ def test_quote_lifecycle(live_client: Pennylane, run_tag: str) -> None:
     )
     quote = live_client.quotes.create(
         customer_id=customer.id,
-        date="2026-07-09",
-        deadline="2026-08-08",
+        date=TODAY,
+        deadline=DEADLINE,
         invoice_lines=[
             {
                 "label": f"Quoted work {run_tag}",
@@ -143,7 +146,7 @@ def test_balanced_ledger_entry(live_client: Pennylane, run_tag: str) -> None:
     if not journals.items or len(accounts.items) < 2:
         pytest.skip("sandbox lacks a journal or ledger accounts")
     entry = live_client.ledger_entries.create(
-        date="2026-07-09",
+        date=TODAY,
         journal_id=journals.items[0].id,
         label=f"Integration entry {run_tag}",
         ledger_entry_lines=[

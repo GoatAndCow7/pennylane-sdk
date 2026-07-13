@@ -12,6 +12,7 @@ Run them with:
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 import pytest
 
@@ -25,11 +26,16 @@ pytestmark = pytest.mark.skipif(
 
 
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    # This hook receives every collected item in the session, not only the
+    # ones under this directory: scope the skip to the integration folder,
+    # otherwise the whole unit suite gets skipped when no token is set.
     if _TOKEN:
         return
+    here = Path(__file__).parent
     skip = pytest.mark.skip(reason="PENNYLANE_API_TOKEN not set")
     for item in items:
-        item.add_marker(skip)
+        if here in Path(str(item.fspath)).parents:
+            item.add_marker(skip)
 
 
 @pytest.fixture(scope="session")
