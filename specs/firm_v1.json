@@ -9342,13 +9342,14 @@
       "get": {
         "operationId": "getSupplierInvoicesChanges",
         "summary": "Get supplier invoices changes events",
-        "description": "Returns the list of changes based on the provided `start_date`.\nIf no `start_date` is provided it returns the oldest set of recorded changes.\nChanges for the last 4 weeks are retained. The items will be returned using\n`processed_at` in ASC order (oldest first).\n\n\n> ℹ️\n> This endpoint requires the following scope: `supplier_invoices:readonly`",
+        "description": "Returns the list of changes based on the provided `start_date`.\nIf no `start_date` is provided it returns the oldest set of recorded changes.\nChanges for the last 4 weeks are retained. The items will be returned using\n`processed_at` in ASC order (oldest first).\n\n\n> ℹ️\n> This endpoint requires one of the following scopes: `supplier_invoices:all`, `supplier_invoices:readonly`",
         "tags": [
           "Hidden"
         ],
         "security": [
           {
             "oauth2": [
+              "supplier_invoices:all",
               "supplier_invoices:readonly"
             ]
           }
@@ -9802,13 +9803,14 @@
       "get": {
         "operationId": "getCustomerInvoicesChanges",
         "summary": "Get customer invoices changes events",
-        "description": "Returns the list of changes based on the provided `start_date`.\nIf no `start_date` is provided it returns the oldest set of recorded changes.\nChanges for the last 4 weeks are retained. The items will be returned using\n`processed_at` in ASC order (oldest first).\n\n\n> ℹ️\n> This endpoint requires the following scope: `customer_invoices:readonly`",
+        "description": "Returns the list of changes based on the provided `start_date`.\nIf no `start_date` is provided it returns the oldest set of recorded changes.\nChanges for the last 4 weeks are retained. The items will be returned using\n`processed_at` in ASC order (oldest first).\n\n\n> ℹ️\n> This endpoint requires one of the following scopes: `customer_invoices:all`, `customer_invoices:readonly`",
         "tags": [
           "Hidden"
         ],
         "security": [
           {
             "oauth2": [
+              "customer_invoices:all",
               "customer_invoices:readonly"
             ]
           }
@@ -10684,7 +10686,7 @@
       "get": {
         "operationId": "getSupplierInvoices",
         "summary": "List supplier invoices",
-        "description": "This endpoint returns a list of supplier invoices.\n\n> ℹ️\n> This endpoint requires the following scope: `supplier_invoices:readonly`",
+        "description": "This endpoint returns a list of supplier invoices.\n\n> ℹ️\n> This endpoint requires one of the following scopes: `supplier_invoices:all`, `supplier_invoices:readonly`",
         "tags": [
           "Hidden",
           "Supplier Invoices"
@@ -10692,6 +10694,7 @@
         "security": [
           {
             "oauth2": [
+              "supplier_invoices:all",
               "supplier_invoices:readonly"
             ]
           }
@@ -11551,7 +11554,7 @@
       "get": {
         "operationId": "getSupplierInvoice",
         "summary": "Retrieve a supplier invoice",
-        "description": "This endpoint returns a supplier invoice.\n\n> ℹ️\n> This endpoint requires the following scope: `supplier_invoices:readonly`",
+        "description": "This endpoint returns a supplier invoice.\n\n> ℹ️\n> This endpoint requires one of the following scopes: `supplier_invoices:all`, `supplier_invoices:readonly`",
         "tags": [
           "Hidden",
           "Supplier Invoices"
@@ -11559,6 +11562,7 @@
         "security": [
           {
             "oauth2": [
+              "supplier_invoices:all",
               "supplier_invoices:readonly"
             ]
           }
@@ -14104,7 +14108,7 @@
       "get": {
         "operationId": "getCustomerInvoices",
         "summary": "List customer invoices",
-        "description": "List customer invoices and credit notes\n\n> ℹ️\n> This endpoint requires the following scope: `customer_invoices:readonly`",
+        "description": "List customer invoices and credit notes\n\n> ℹ️\n> This endpoint requires one of the following scopes: `customer_invoices:all`, `customer_invoices:readonly`",
         "tags": [
           "Hidden",
           "Customer Invoices"
@@ -14112,6 +14116,7 @@
         "security": [
           {
             "oauth2": [
+              "customer_invoices:all",
               "customer_invoices:readonly"
             ]
           }
@@ -15141,7 +15146,7 @@
       "get": {
         "operationId": "getCustomerInvoice",
         "summary": "Retrieve a customer invoice",
-        "description": "Retrieve a customer invoice or a credit note\n\n> ℹ️\n> This endpoint requires the following scope: `customer_invoices:readonly`",
+        "description": "Retrieve a customer invoice or a credit note\n\n> ℹ️\n> This endpoint requires one of the following scopes: `customer_invoices:all`, `customer_invoices:readonly`",
         "tags": [
           "Hidden",
           "Customer Invoices"
@@ -15149,6 +15154,7 @@
         "security": [
           {
             "oauth2": [
+              "customer_invoices:all",
               "customer_invoices:readonly"
             ]
           }

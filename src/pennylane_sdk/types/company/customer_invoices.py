@@ -172,6 +172,7 @@ class ImputationDates(PennylaneModel):
 
 class InvoiceLine(PennylaneModel):
     """An invoice line of a customer invoice.
+    substance: str | None = None
 
     Reference: https://pennylane.readme.io/reference/getcustomerinvoiceinvoicelines
     """

@@ -30,6 +30,8 @@ class Product(PennylaneModel):
     price: Money | None = None
     unit: str | None = None
     currency: str | None = None
+    substance: str | None = None
+    """Derived from the ledger account: goods, services, or None."""
     reference: str | None = None
     ledger_account: ProductLedgerAccount | None = None
     archived_at: dt.datetime | None = None

@@ -62,6 +62,7 @@ class Products(SyncAPIResource):
         currency: str | None = None,
         reference: str | None = None,
         ledger_account_id: int | None = None,
+        substance: str | None = None,
     ) -> Product:
         """Create a product.
 
@@ -78,6 +79,8 @@ class Products(SyncAPIResource):
             currency: ISO currency code (default EUR).
             reference: Product reference shown on documents.
             ledger_account_id: Ledger account to book sales on.
+            substance: ``"goods"`` or ``"services"``; must be consistent
+                with ``ledger_account_id`` when both are provided.
         """
         body = drop_none(
             {
@@ -90,6 +93,7 @@ class Products(SyncAPIResource):
                 "currency": currency,
                 "reference": reference,
                 "ledger_account_id": ledger_account_id,
+                "substance": substance,
             }
         )
         return self._post("/products", cast_to=Product, body=body)
@@ -107,6 +111,7 @@ class Products(SyncAPIResource):
         currency: str | None = None,
         reference: str | None = None,
         ledger_account_id: int | None = None,
+        substance: str | None = None,
     ) -> Product:
         """Update a product. Only the provided fields are modified.
 
@@ -124,6 +129,7 @@ class Products(SyncAPIResource):
                 "currency": currency,
                 "reference": reference,
                 "ledger_account_id": ledger_account_id,
+                "substance": substance,
             }
         )
         return self._put(f"/products/{product_id}", cast_to=Product, body=body)
@@ -171,6 +177,7 @@ class AsyncProducts(AsyncAPIResource):
         currency: str | None = None,
         reference: str | None = None,
         ledger_account_id: int | None = None,
+        substance: str | None = None,
     ) -> Product:
         """Create a product.
 
@@ -188,6 +195,7 @@ class AsyncProducts(AsyncAPIResource):
                 "currency": currency,
                 "reference": reference,
                 "ledger_account_id": ledger_account_id,
+                "substance": substance,
             }
         )
         return await self._post("/products", cast_to=Product, body=body)
@@ -205,6 +213,7 @@ class AsyncProducts(AsyncAPIResource):
         currency: str | None = None,
         reference: str | None = None,
         ledger_account_id: int | None = None,
+        substance: str | None = None,
     ) -> Product:
         """Update a product. Only the provided fields are modified.
 
@@ -222,6 +231,7 @@ class AsyncProducts(AsyncAPIResource):
                 "currency": currency,
                 "reference": reference,
                 "ledger_account_id": ledger_account_id,
+                "substance": substance,
             }
         )
         return await self._put(f"/products/{product_id}", cast_to=Product, body=body)

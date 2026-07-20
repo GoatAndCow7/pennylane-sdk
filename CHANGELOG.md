@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-20
+
+### Added
+
+- `substance` ("goods" or "services") on product creation and update, and
+  as a derived field on `Product` and `InvoiceLine` responses.
+
+### Changed
+
+- Refreshed vendored specs (new German VAT exemption code, invoice line
+  `substance` accepted in creation bodies).
+
 ## [0.2.0] - 2026-07-13
 
 ### Added
